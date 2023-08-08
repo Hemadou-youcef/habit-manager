@@ -3,6 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 
+// React
+import { useState } from 'react'
+
 // React Icons
 import { FaFolder } from 'react-icons/fa'
 import { AiOutlinePlus, AiTwotoneSetting } from 'react-icons/ai'
@@ -15,26 +18,46 @@ import styles from './sidebar.module.css'
 
 // Components
 import { useAuth } from '@/components/authProvider';
+import Settings from '../settings/settings';
+import HabitsGroup from '../forms/habits-group-form/habit-form/habitsGroup';
 
 // Typescript Types
 type UserInfo = {
     name: string,
     email: string,
-    habitsGroups: {
-        name: string,
-        icon: string,
-    }[]
 }
 type UserLoginInfo = {
     email: string,
     password: string,
+}
+type HabitsGroups = {
+    name: string,
+    icon: string,
 }
 
 
 
 const SideBar = () => {
     const { user, login, logOut }: { user: UserInfo, login: (user: UserLoginInfo) => void, logOut: () => void } = useAuth();
+    const habitsGroups: HabitsGroups[] = [{
+        name: 'Health',
+        icon: 'health',
+    },
+    {
+        name: 'Work',
+        icon: 'work',
+    },
+    {
+        name: 'Social',
+        icon: 'social',
+    }];
+
+    // Hooks
     const currentRoute = usePathname();
+
+    // States
+    const [showHabitsGroupForm, setShowHabitsGroupForm] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
 
     if (!user) return (
         <>
@@ -72,7 +95,7 @@ const SideBar = () => {
                     <p>
                         Habits Groups
                     </p>
-                    {user.habitsGroups.map((group, index) => (
+                    {habitsGroups && habitsGroups.map((group, index) => (
                         <Link href={`/habits-group/${group.name}`} key={index}>
                             <div className={`${styles.sectionElement} ${currentRoute === `/habits-group/${group.name}` ? styles.active : ''}`}>
                                 <FaFolder size={20} />
@@ -80,10 +103,10 @@ const SideBar = () => {
                             </div>
                         </Link>
                     ))}
-                    <div className={styles.sectionElement}>
+                    <div className={styles.sectionElement} onClick={() => setShowHabitsGroupForm(true)}>
                         <AiOutlinePlus size={18} />
                         <p>
-                        New Group
+                            New Group
                         </p>
                     </div>
                 </div>
@@ -91,21 +114,24 @@ const SideBar = () => {
                     <p>
                         Preferences
                     </p>
-                    <Link href="/settings">
-                        <div className={`${styles.sectionElement} ${currentRoute === '/settings' ? styles.active : ''}`}>
-                            <AiTwotoneSetting size={20} />
-                            <p>Settings</p>
-                        </div>
-                    </Link>
+                    <div
+                        className={`${styles.sectionElement} ${currentRoute === '/settings' ? styles.active : ''}`}
+                        onClick={() => setShowSettings(true)}
+                    >
+                        <AiTwotoneSetting size={20} />
+                        <p>Settings</p>
+                    </div>
                     <div className={styles.sectionElement} onClick={() => logOut()}>
                         <IoLogOutOutline size={20} />
                         <p>Logout</p>
                     </div>
                 </div>
             </div>
-
+            {showHabitsGroupForm && <HabitsGroup closeForm={() => setShowHabitsGroupForm(false)} />}
+            {showSettings && <Settings closeForm={() => setShowSettings(false)} />}
         </>
     );
 }
 
 export default SideBar;
+

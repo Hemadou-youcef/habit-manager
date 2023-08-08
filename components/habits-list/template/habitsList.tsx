@@ -10,7 +10,7 @@ import { BiSolidDownArrow, BiSolidUpArrow } from 'react-icons/bi'
 // Components
 import GoodHabit from '../list-item/good-habit/goodHabit'
 import BadHabit from '../list-item/bad-habit/badHabit'
-import HabitForm from '@/components/habits-list/forms/habit-form/habitForm'
+import HabitForm from '@/components/forms/habit-form/habitForm'
 
 
 // Typescript Types

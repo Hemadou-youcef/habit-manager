@@ -1,7 +1,18 @@
+// Components 
+import { useDataContext } from "../layouts/app-layout/layout";
+
+type HabitStatitics = {
+    id: string;
+    value: number;
+    createdAt: string;
+}
+
+
 const ProgressBar = () => {
+    const { selectedHabit } = useDataContext();
     return (
         <>
-            this is progress bar
+            
         </>
     );
 }

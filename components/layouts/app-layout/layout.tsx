@@ -1,30 +1,43 @@
 // Next Components
 import Head from 'next/head'
 
+// React Components
+import { createContext, useContext, useState } from 'react';
+
 // Styles
 import styles from './layout.module.css';
 
 // Components
 import SideBar from '@/components/sidebar/sidebar'
 import ProgressBar from '@/components/progress/progress'
-import { useAuth } from '@/components/authProvider';
 
 
 // Typescript Types
-type User = {
-    name: string,
-    email: string,
-    habitsGroups: {
-        name: string,
-        icon: string,
-    }[]
-}
+// type User = {
+//     name: string,
+//     email: string,
+//     habitsGroups: {
+//         name: string,
+//         icon: string,
+//     }[]
+// }
+
+// Context
+const DataContext = createContext<any>(null);
 
 
-const Layout = ({children}: {children: React.ReactNode}) => {
-    const { user } : { user: User } = useAuth();
+const Layout = ({ children }: { children: React.ReactNode }) => {
+    const [selectedHabit, setSelectedHabit] = useState(null);
+
+    const selectHabit = (habit: any) => {
+        setSelectedHabit(habit);
+    }
+    const dataContextValue = {
+        selectedHabit,
+        selectHabit,
+    }
     return (
-        <>
+        <DataContext.Provider value={dataContextValue}>
             <Head>
                 <title>Habits</title>
                 <meta name="description" content="Habits is the best app you would like to manage your habits" />
@@ -42,34 +55,9 @@ const Layout = ({children}: {children: React.ReactNode}) => {
                     <ProgressBar />
                 </div>
             </main>
-        </>
+        </DataContext.Provider>
     );
 }
 
 export default Layout;
-
-
-// export async function getServerSideProps() {
-//     return {
-//       props: {
-//         user: {
-//           name: 'Youcef Hemadou',
-//           email: 'youcef.hemadou@hotmail.com',
-//           habitsGroups: [
-//             {
-//               name: 'Health',
-//               icon: 'health',
-//             },
-//             {
-//               name: 'Work',
-//               icon: 'work',
-//             },
-//             {
-//               name: 'Social',
-//               icon: 'social',
-//             }
-//           ]
-//         }
-//       }, 
-//     }
-//   }
+export const useDataContext = () => useContext(DataContext);

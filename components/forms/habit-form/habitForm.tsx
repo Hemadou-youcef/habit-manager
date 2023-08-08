@@ -3,7 +3,7 @@
 import styles from './habitForm.module.css'
 
 // Components
-import Overlay from "../overlay/overlay";
+import Overlay from '@/components/overlay/overlay';
 import { BiDotsVertical } from 'react-icons/bi';
 
 // Typescript Types
@@ -126,7 +126,7 @@ const HabitForm = ({ closeForm }: { closeForm: () => void }) => {
 
                 </div>
                 <div className={styles.footer}>
-                    <button className={styles.cancelBtn}>
+                    <button className={styles.cancelBtn} onClick={() => closeForm()}>
                         Cancel
                     </button>
                     <input type="submit" value="Save" className={styles.submit} />

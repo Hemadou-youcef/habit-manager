@@ -146,6 +146,10 @@
 .footer .submit:active{
     background-color: #2a67f4d9;
 }
+.footer .submit:disabled{
+    background-color: #82a4f3d9;
+    cursor: not-allowed;
+}
 .footer .cancelBtn{
     padding: 8px;
     border-radius: 3px;

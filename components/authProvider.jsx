@@ -7,20 +7,6 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState({
         name: 'Youcef Hemadou',
         email: 'youcef.hemadou@hotmail.com',
-        habitsGroups: [
-            {
-                name: 'Health',
-                icon: 'health',
-            },
-            {
-                name: 'Work',
-                icon: 'work',
-            },
-            {
-                name: 'Social',
-                icon: 'social',
-            }
-        ]
     });
 
     const login = (user) => {

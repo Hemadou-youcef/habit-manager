@@ -24,6 +24,8 @@ export default habitsGroup;
 
 export async function getServerSideProps(context: any) {
     const { id } = context.params;
+    // const response = await fetch(`http://localhost:3000/api/habit-groups/${id}`);
+    // const habitGroup = await response.json();
     return {
         props: {
             habitGroup:{
