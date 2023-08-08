@@ -1,0 +1,20 @@
+.app{
+    display: grid;
+    grid-template-areas: "sidebar main progress";
+    grid-template-columns: 240px minmax(600px,700px) auto;
+    height: 100vh;
+    padding: 0;
+}
+.sidebar{
+    grid-area: sidebar;
+    background-color: #f5f5f5;  
+    border-right: 1px solid #e0e0e0;
+}
+.main{
+    grid-area: main;
+}
+.progress{
+    grid-area: progress;
+    background-color: #f5f5f5;
+    border-left: 1px solid #e0e0e0;
+}
