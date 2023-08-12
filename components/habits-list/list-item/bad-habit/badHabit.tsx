@@ -11,41 +11,14 @@ import { AiFillEdit } from 'react-icons/ai'
 
 
 // Typescript Types
-type Habit = {
-    id: string;
-    name: string;
-    createdAt: string;
-    isArchived: boolean;
-    accentColor: string;
-    goals: {
-        createdAt: string;
-        periodicity: string;
-        unit: {
-            symbol: string;
-            type: string;
-        };
-        value: number;
-    };
-    regularly?: string;
-    startDate: number;
-    habitType: {
-        rawValue: number;
-        habitType: string;
-    };
-    priority: number;
-    priorityByArea: string;
-    shareLink: string;
-    progress: {
-        id: string;
-        value: number;
-        createdAt: string;
-    }
-};
+import { Habit, Progress } from '@/types/index'
+
 
 const BadHabit = ({ habit }: { habit: Habit }) => {
     const [options, setOptions] = useState(false);
-
     const optionsRef = useRef<HTMLDivElement>(null);
+    const [progress, setProgress] = useState<Progress>(habit.progress || { id: 0, value: 0, createdAt: new Date(), updatedAt: new Date() });
+
 
     useEffect(() => {
         if (options) {
@@ -92,7 +65,7 @@ const BadHabit = ({ habit }: { habit: Habit }) => {
                                 {habit.name}
                             </p>
                             <p className={styles.habitProgressText}>
-                                {`[${habit.progress.value}/${habit.goals.value} ${habit.goals.unit.symbol}]`}
+                                {`[${progress.value}/${habit.goalsValue} ${habit.goalsUnit}]`}
                             </p>
                         </div>
 

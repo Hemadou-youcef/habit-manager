@@ -1,0 +1,16 @@
+.title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #081a35;
+    text-shadow: 0 0 5px #081a35;
+}
+.text {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #081a35;
+    text-shadow: 0 0 5px #081a35;
+}

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 
 // React
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // React Icons
 import { FaFolder } from 'react-icons/fa'
@@ -17,7 +17,8 @@ import { MdToday } from 'react-icons/md'
 import styles from './sidebar.module.css'
 
 // Components
-import { useAuth } from '@/components/authProvider';
+// import axios from "@/components/library/axios"
+import { useAuth } from '@/components/layouts/auth-layout/authProvider';
 import Settings from '../settings/settings';
 import HabitsGroup from '../forms/habits-group-form/habit-form/habitsGroup';
 
@@ -31,6 +32,7 @@ type UserLoginInfo = {
     password: string,
 }
 type HabitsGroups = {
+    id: number,
     name: string,
     icon: string,
 }
@@ -39,18 +41,7 @@ type HabitsGroups = {
 
 const SideBar = () => {
     const { user, login, logOut }: { user: UserInfo, login: (user: UserLoginInfo) => void, logOut: () => void } = useAuth();
-    const habitsGroups: HabitsGroups[] = [{
-        name: 'Health',
-        icon: 'health',
-    },
-    {
-        name: 'Work',
-        icon: 'work',
-    },
-    {
-        name: 'Social',
-        icon: 'social',
-    }];
+    const [habitsGroups, setHabitsGroups] = useState<HabitsGroups[] | null>(null)
 
     // Hooks
     const currentRoute = usePathname();
@@ -59,15 +50,17 @@ const SideBar = () => {
     const [showHabitsGroupForm, setShowHabitsGroupForm] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
 
-    if (!user) return (
-        <>
-            <div className={styles.main}>
-                <button className={styles.loginBtn}>
-                    Login
-                </button>
-            </div>
-        </>
-    );
+    useEffect(() => {
+        getUserHabitsGroups();
+    }, [])
+
+    const getUserHabitsGroups = async () => {
+        const response = await fetch('/api/habits-group?hihi=sdfsd');
+        const data = await response.json();
+        setHabitsGroups(data)
+        
+    }
+
     return (
         <>
             <div className={styles.main}>
@@ -81,7 +74,7 @@ const SideBar = () => {
                     <Link href="/">
                         <div className={`${styles.sectionElement} ${currentRoute === '/' ? styles.active : ''}`}>
                             <MdToday size={20} />
-                            <p>Today</p>
+                            <p>Today Habits</p>
                         </div>
                     </Link>
                     <Link href="/all-habits">
@@ -96,8 +89,8 @@ const SideBar = () => {
                         Habits Groups
                     </p>
                     {habitsGroups && habitsGroups.map((group, index) => (
-                        <Link href={`/habits-group/${group.name}`} key={index}>
-                            <div className={`${styles.sectionElement} ${currentRoute === `/habits-group/${group.name}` ? styles.active : ''}`}>
+                        <Link href={`/habits-group/${group.id}`} key={index}>
+                            <div className={`${styles.sectionElement} ${currentRoute === `/habits-group/${group.id}` ? styles.active : ''}`}>
                                 <FaFolder size={20} />
                                 <p>{group.name}</p>
                             </div>
@@ -127,7 +120,7 @@ const SideBar = () => {
                     </div>
                 </div>
             </div>
-            {showHabitsGroupForm && <HabitsGroup closeForm={() => setShowHabitsGroupForm(false)} />}
+            {showHabitsGroupForm && <HabitsGroup closeForm={() => {setShowHabitsGroupForm(false);getUserHabitsGroups();}} />}
             {showSettings && <Settings closeForm={() => setShowSettings(false)} />}
         </>
     );

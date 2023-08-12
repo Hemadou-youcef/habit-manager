@@ -1,51 +1,26 @@
 
-// React Components
-import { useState, useRef, useEffect } from 'react'
+// React
+import { useState, useRef, useEffect } from 'react';
 
 // Styles
-import styles from '../../template/habitsList.module.css'
+import styles from '../../template/habitsList.module.css';
+
+// Components
+import axios from 'axios';
 
 // Icons 
-import { BiDotsVertical } from 'react-icons/bi'
-import { BsFillBookFill, BsCheckLg, BsXLg } from 'react-icons/bs'
-import { LuTimer } from 'react-icons/lu'
-import { AiOutlinePlus, AiFillEdit } from 'react-icons/ai'
+import { BiDotsVertical } from 'react-icons/bi';
+import { BsFillBookFill, BsCheckLg, BsXLg } from 'react-icons/bs';
+import { LuTimer } from 'react-icons/lu';
+import { AiOutlinePlus, AiFillEdit } from 'react-icons/ai';
 
 // Typescript Types
-type Habit = {
-    id: string;
-    name: string;
-    createdAt: string;
-    isArchived: boolean;
-    accentColor: string;
-    goals: {
-        createdAt: string;
-        periodicity: string;
-        unit: {
-            symbol: string;
-            type: string;
-        };
-        value: number;
-    };
-    regularly?: string;
-    startDate: number;
-    habitType: {
-        rawValue: number;
-        habitType: string;
-    };
-    priority: number;
-    priorityByArea: string;
-    shareLink: string;
-    progress: {
-        id: string;
-        value: number;
-        createdAt: string;
-    }
-};
+import { Habit, HabitWithProgress, Progress } from '@/types/index'
 
-const GoodHabit = ({ habit, editHabit }: { habit: Habit, editHabit: (habit: Habit) => void }) => {
-    const [Done, setDone] = useState(false); // [TODO] change this to habit.progress.value >= habit.goals.value
+const GoodHabit = ({ habit, readOnly = true, editHabit }: { habit: Habit | HabitWithProgress, readOnly: boolean, editHabit: (habit: HabitWithProgress) => void }) => {
+    const [Done, setDone] = useState(habit.goalsValue <= (habit as HabitWithProgress).progress.value);
     const [options, setOptions] = useState(false);
+    const [progress, setProgress] = useState<Progress | undefined>((habit as HabitWithProgress).progress);
 
     const optionsRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +33,20 @@ const GoodHabit = ({ habit, editHabit }: { habit: Habit, editHabit: (habit: Habi
         }
     }, [options]);
 
+    const handleEditProgress =  () => {
+        axios.put(`/api/progress/${(progress as Progress).id}`, {
+            value: (progress as Progress).value,
+        })
+            .then((res) => {
+                setProgress(res.data.data);
+                editHabit({ ...(habit as HabitWithProgress), progress: res.data });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+
+
     const handleClickOutsideElement = (event: any) => {
         if (optionsRef.current && !optionsRef.current.contains(event.target)) {
             // if he click outside the element, close the dropdown of this element if it's open
@@ -67,34 +56,32 @@ const GoodHabit = ({ habit, editHabit }: { habit: Habit, editHabit: (habit: Habi
 
     const handleAddProgressOneTime = () => {
         console.log('add progress one time');
-        const newHabit = { ...habit };
-        newHabit.progress.value += 1;
-        if (newHabit.progress.value >= newHabit.goals.value) {
+
+        (progress as Progress).value += 1;
+        if ((progress as Progress).value >= habit.goalsValue) {
             handleMarkAsDone();
         } else {
-            editHabit(newHabit);
+            handleEditProgress();
         }
     }
 
     const handleAddProgressTimer = () => {
         console.log('add progress timer');
-        const newHabit = { ...habit };
-        newHabit.progress.value += 1;
-        if (newHabit.progress.value >= newHabit.goals.value) {
+        (progress as Progress).value += 1;
+        if ((progress as Progress).value >= habit.goalsValue) {
             handleMarkAsDone();
         } else {
-            editHabit(newHabit);
+            handleEditProgress();
         }
 
     }
 
     const handleMarkAsDone = () => {
         console.log('mark as done');
-        const newHabit = { ...habit };
-        newHabit.progress.value = newHabit.goals.value;
+        (progress as Progress).value = habit.goalsValue;
         setDone(true);
         setOptions(false);
-        editHabit(newHabit);
+        handleEditProgress();
     }
 
     const handleFail = () => {
@@ -106,7 +93,6 @@ const GoodHabit = ({ habit, editHabit }: { habit: Habit, editHabit: (habit: Habi
         console.log('edit');
         setOptions(false);
     }
-
 
     return (
         <>
@@ -122,16 +108,16 @@ const GoodHabit = ({ habit, editHabit }: { habit: Habit, editHabit: (habit: Habi
                             <p className={styles.habitName}>
                                 {habit.name}
                             </p>
-                            <p className={styles.habitProgressText}>
-                                {`[${habit.progress.value}/${habit.goals.value} ${habit.goals.unit.symbol}]`}
-                            </p>
+                            {!readOnly && <p className={styles.habitProgressText}>
+                                {`[${(progress as Progress).value}/${habit.goalsValue} ${habit.goalsUnit}]`}
+                            </p>}
                         </div>
 
                     </div>
 
                     <div className={styles.habitActions}>
                         <div className={styles.habitFillButton}>
-                            {habit.goals.unit.symbol === 'min' ?
+                            {habit.goalsUnit === 'min' ?
                                 (
                                     <button onClick={handleAddProgressTimer}>
                                         <LuTimer size={18} />
@@ -155,30 +141,28 @@ const GoodHabit = ({ habit, editHabit }: { habit: Habit, editHabit: (habit: Habi
                                 style={{ display: options ? 'block' : 'none' }}
 
                             >
+
                                 <div className={styles.habitActionDropDownItem} onClick={handleMarkAsDone}>
                                     <BsCheckLg />
                                     Mark as Done
                                 </div>
-                                <div className={styles.habitActionDropDownItem} onClick={handleFail}>
-                                    <BsXLg />
-                                    Fail
-                                </div>
+
                                 <div className={styles.habitActionDropDownItem} onClick={handleEdit}>
                                     <AiFillEdit />
                                     Edit
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div className={styles.habitProgress}>
-                    <div className={styles.progress}>
-                        <div className={styles.progressDone} style={{ width: `${habit.progress.value * 100 / habit.goals.value}%`, backgroundColor: habit.accentColor }}></div>
+                {!readOnly && (
+                    <div className={styles.habitProgress}>
+                        <div className={styles.progress}>
+                            <div className={styles.progressDone} style={{ width: `${(progress as Progress).value * 100 / habit.goalsValue}%`, backgroundColor: habit.accentColor }}></div>
+                        </div>
+                        {/* <p className={styles.progressText}>{habit.progress * 100}%</p> */}
                     </div>
-                    {/* <p className={styles.progressText}>{habit.progress * 100}%</p> */}
-                </div>
+                )}
             </div>
         </>
     );

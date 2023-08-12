@@ -1,5 +1,5 @@
 // React Components
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Styles
 import styles from './habitsList.module.css'
@@ -14,41 +14,16 @@ import HabitForm from '@/components/forms/habit-form/habitForm'
 
 
 // Typescript Types
-type Habit = {
-    id: string;
-    name: string;
-    createdAt: string;
-    isArchived: boolean;
-    accentColor: string;
-    goals: {
-        createdAt: string;
-        periodicity: string;
-        unit: {
-            symbol: string;
-            type: string;
-        };
-        value: number;
-    };
-    regularly?: string;
-    startDate: number;
-    habitType: {
-        rawValue: number;
-        habitType: string;
-    };
-    priority: number;
-    priorityByArea: string;
-    shareLink: string;
-    progress: {
-        id: string;
-        value: number;
-        createdAt: string;
-    }
-};
+import { Habit, HabitWithProgress, Progress } from '@/types/index'
 
-const HabitsList = ({ title, habits }: { title: string, habits: Habit[][] }) => {
-    const [habitsList, setHabitsList] = useState<Habit[][]>(habits);
+const HabitsList = ({ title, readOnly, habits, loading, refresh }: { title: string, readOnly: boolean, habits: Habit[][] | HabitWithProgress[][], loading: boolean, refresh: () => void }) => {
+    const [habitsList, setHabitsList] = useState<Habit[][] | HabitWithProgress[][]>(habits);
     const [showBadHabits, setShowBadHabits] = useState<boolean>(true);
     const [showHabitForm, setShowHabitForm] = useState<boolean>(false);
+
+    useEffect(() => {
+        setHabitsList(habits);
+    }, [habits]);
 
     const handleEditHabit = (habit: Habit): boolean => {
         // Search for habit in goodHabits
@@ -84,32 +59,35 @@ const HabitsList = ({ title, habits }: { title: string, habits: Habit[][] }) => 
                     </div>
                 </div>
                 <div className={styles.body}>
-                    <div className={styles.habits}>
-                        {habitsList[0].length === 0 && habitsList[1].length === 0 && <p className={styles.noHabits}>No Habits Found</p>}
-                        {habitsList[0].map((habit, index) => (
-                            <div key={habit.id}>
-                                <GoodHabit habit={habit} editHabit={handleEditHabit} />
-                                <hr />
-                            </div>
-                        ))}
-                        {habitsList[1].length > 0 &&
-                            (
-                                <div className={styles.badHabits} onClick={() => setShowBadHabits(!showBadHabits)}>
-                                    {showBadHabits ? <BiSolidDownArrow /> : <BiSolidUpArrow />}
-                                    {`Bad Habits (${habitsList[1].length})`}
+                    {loading ? <p className={styles.loading}>Loading...</p> :
+                        <div className={styles.habits}>
+                            {habitsList[0].length === 0 && habitsList[1].length === 0 && <p className={styles.noHabits}>No Habits Found</p>}
+                            {habitsList[0].map((habit, index) => (
+                                <div key={habit.id}>
+                                    {/* CHECK IF HABIT IS TYPE OF HabitWithProgress */}
+                                    <GoodHabit habit={habit} editHabit={handleEditHabit} readOnly={readOnly} />
+                                    <hr />
                                 </div>
-                            )
-                        }
-                        {showBadHabits && habitsList[1].map((habit, index) => (
-                            <div key={habit.id}>
-                                <BadHabit habit={habit} />
-                                <hr />
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                            {habitsList[1].length > 0 &&
+                                (
+                                    <div className={styles.badHabits} onClick={() => setShowBadHabits(!showBadHabits)}>
+                                        {showBadHabits ? <BiSolidDownArrow /> : <BiSolidUpArrow />}
+                                        {`Bad Habits (${habitsList[1].length})`}
+                                    </div>
+                                )
+                            }
+                            {showBadHabits && habitsList[1].map((habit, index) => (
+                                <div key={habit.id}>
+                                    <BadHabit habit={habit} />
+                                    <hr />
+                                </div>
+                            ))}
+                        </div>
+                    }
                 </div>
             </div>
-            {showHabitForm && <HabitForm closeForm={() => setShowHabitForm(false)} />}
+            {showHabitForm && <HabitForm data={null} editMode={false} refresh={() => refresh()} closeForm={() => setShowHabitForm(false)} />}
         </>
     );
 }

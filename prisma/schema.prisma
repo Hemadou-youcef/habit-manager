@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Our Application is Habits Management System 
+
+// Define User model
+model Users {
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String        @unique
+  password    String // You might want to hash passwords for security
+  habits      Habits[] // Establishes a one-to-many relationship with Habit model
+  habitGroups HabitsGroup[] // Establishes a one-to-many relationship with HabitGroup model
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+// Define HabitGroup model
+model HabitsGroup {
+  id        Int      @id @default(autoincrement())
+  user      Users    @relation(fields: [userId], references: [id])
+  userId    Int
+  name      String
+  icon      String   @default("folder")
+  habits    Habits[] // Establishes a one-to-many relationship with Habit model
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Define Habit model
+model Habits {
+  id                     Int          @id @default(autoincrement())
+  user                   Users        @relation(fields: [userId], references: [id])
+  userId                 Int
+  habitGroup             HabitsGroup? @relation(fields: [habitGroupId], references: [id])
+  habitGroupId           Int?
+  name                   String
+  type                   String // Options: "good", "bad"
+  startDate              DateTime
+  isArchived             Boolean      @default(false)
+  accentColor            String
+  icon                   String
+  goalsValue             Int
+  goalsPeriodicity       String // Options: "daily", "weekly", "monthly", "yearly"
+  goalsUnit              String
+  goalsPeriodicityValues String // Options for "daily"
+  progress               Progress[] // Establishes a one-to-many relationship with Progress model
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @default(now()) @updatedAt
+  shareLink              String
+}
+
+// Define Progress model
+model Progress {
+  id        Int      @id @default(autoincrement())
+  habit     Habits   @relation(fields: [habitId], references: [id])
+  habitId   Int
+  value     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// // Habits in Typescript
+// type Habit = {
+// id: number;
+// name: string;
+// type: string;
+// startDate: Date;
+// isArchived: boolean;
+// accentColor: string;
+// icon: string;
+// goalsValue: number;
+// goalsPeriodicity: string;
+// goalsUnit: string;
+// goalsPeriodicityValues: string;
+// progress: Progress[];
+// createdAt: Date;
+// updatedAt: Date;
+// shareLink: string;
+// }
+
+// // Progress in Typescript
+// type Progress = {
+// id: number;
+// habit: Habit;
+// value: number;
+// createdAt: Date;
+// updatedAt: Date;
+// }

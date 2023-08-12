@@ -5,49 +5,36 @@ import { useState } from 'react';
 import styles from './habitsGroup.module.css';
 
 // Components
+import axios from 'axios';
 import Overlay from '@/components/overlay/overlay';
 import { BiDotsVertical } from 'react-icons/bi';
 
 // Typescript Types
-type Habit = {
-    id: string;
-    name: string;
-    createdAt: string;
-    isArchived: boolean;
-    accentColor: string;
-    goals: {
-        createdAt: string;
-        periodicity: string;
-        unit: {
-            symbol: string;
-            type: string;
-        };
-        value: number;
-    };
-    regularly?: string;
-    startDate: number;
-    habitType: {
-        rawValue: number;
-        habitType: string;
-    };
-    priority: number;
-    priorityByArea: string;
-    shareLink: string;
-    progress: {
-        id: string;
-        value: number;
-        createdAt: string;
-    }
-};
+type Response = {
+    message: String;
+    data?: any;
+}
 
 const HabitsGroup = ({ closeForm }: { closeForm: () => void }) => {
-    const [GroupInfo, setGroupInfo] = useState({
+    const [groupInfo, setGroupInfo] = useState({
         name: '',
-        color: ''
+        icon: ''
     });
+    const [loading, setLoading] = useState(false);
+    const [cleanUpVariable, setCleanUpVariable] = useState(false)
 
     const handleSubmit = () => {
-        console.log(GroupInfo);
+        setLoading(true);
+        axios.post(`/api/habits-group`, groupInfo)
+            .then((res: any) => {
+                closeForm();
+            })
+            .catch((err: any) => {
+                console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
+            })
     }
 
     return (
@@ -57,24 +44,24 @@ const HabitsGroup = ({ closeForm }: { closeForm: () => void }) => {
                     <p className={styles.title}>New Habits Group</p>
                 </div>
                 <div className={styles.body}>
-                    <div className={styles.form}>
+                    <form className={styles.form}>
                         <div className={styles.formGroup} style={{ flexDirection: 'row' }}>
                             <input
                                 className={styles.input}
                                 type="text"
                                 placeholder="Group Name"
                                 style={{ width: '100%' }}
-                                value={GroupInfo.name}
-                                onChange={(e) => setGroupInfo({ ...GroupInfo, name: e.target.value })}
+                                value={groupInfo.name}
+                                onChange={(e) => setGroupInfo({ ...groupInfo, name: e.target.value })}
                             />
                             <input
                                 className={styles.input}
-                                type="color"
-                                value={GroupInfo.color}
-                                onChange={(e) => setGroupInfo({ ...GroupInfo, color: e.target.value })}
+                                type="text"
+                                value={groupInfo.icon}
+                                onChange={(e) => setGroupInfo({ ...groupInfo, icon: e.target.value })}
                             />
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div className={styles.footer}>
                     <button className={styles.cancelBtn} onClick={() => closeForm()}>
@@ -82,10 +69,10 @@ const HabitsGroup = ({ closeForm }: { closeForm: () => void }) => {
                     </button>
                     <input
                         type="submit"
-                        value="Save"
+                        value={loading ? 'Loading...' : 'Save'}
                         className={styles.submit}
                         onClick={() => handleSubmit()}
-                        disabled={GroupInfo.name === '' || GroupInfo.color === ''}
+                        disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
                     />
                 </div>
             </div>

@@ -1,21 +1,21 @@
 
+// React 
+import { useState } from "react";
+
 // Components
 import HabitsList from "@/components/habits-list/template/habitsList";
 
 // Typescript Types
-type HabitGroup = {
-    id: string;
-    name: string;
-    createdAt: string;
-    isArchived: boolean;
-    accentColor: string;
-}
+import { Habit, HabitWithProgress, HabitsGroup } from "@/types";
 
 
-const habitsGroup = ({habitGroup}: {habitGroup: HabitGroup}) => {
+const habitsGroup = ({habitsGroup}: {habitsGroup: HabitsGroup}) => {
+    // const [habitsList, setHabitsList] = useState<Habit[][] | HabitWithProgress[][]>(habitsGroup.habits);
+    const [loading, setLoading] = useState(false);
+
     return ( 
         <>
-            <HabitsList title={habitGroup.name} habits={[[],[]]} />
+            <HabitsList title={habitsGroup.name} habits={[[],[]]} readOnly={true} refresh={() => {}} loading={loading} />
         </>
      );
 }
@@ -24,17 +24,11 @@ export default habitsGroup;
 
 export async function getServerSideProps(context: any) {
     const { id } = context.params;
-    // const response = await fetch(`http://localhost:3000/api/habit-groups/${id}`);
-    // const habitGroup = await response.json();
+    const response = await fetch(`${process.env.BASE_URL}/api/habits-group/${id}`);
+    const habitsGroup = await response.json();
     return {
         props: {
-            habitGroup:{
-                id: id,
-                name: id,
-                createdAt: "2021-08-01T00:00:00.000Z",
-                isArchived: false,
-                accentColor: "#000000"
-            }
+            habitsGroup
         }
     }
 }
