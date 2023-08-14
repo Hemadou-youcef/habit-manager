@@ -1,0 +1,128 @@
+.bg_red {
+    background-color: crimson;
+    color: white;
+}
+
+.bg_red:active {
+    background-color: rgb(233, 74, 106);
+}
+
+.bg_red:disabled {
+    background-color: rgb(231, 130, 151);
+}
+
+.bg_blue {
+    background-color: #2a67f4;
+    color: white;
+}
+
+.bg_blue:active {
+    background-color: #5585f3;
+}
+
+.bg_blue:disabled {
+    background-color: #8faae9;
+}
+
+.content {
+    padding: 0px;
+    margin: 0;
+}
+
+.header {
+    display: none;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #c5c5c5;
+}
+
+.body {
+    padding: 10px;
+
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    font-size: 50px;
+    font-weight: 600;
+    text-align: center;
+    width: 330px;
+}
+.timer div{
+    padding: 10px 0px;
+    border: 2px solid #ccc;
+    color: #3d3d3d;
+    border-radius: 10px;
+    width: 110px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions>div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.actions button {
+    padding: 10px;
+    margin: 0px;
+    border: 0px;
+    width: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.footer{
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: #f0f0f0;
+}
+
+.footer .submit{
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    background-color: #2a67f4;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
+}
+.footer .submit:active{
+    background-color: #2a67f4d9;
+}
+.footer .submit:disabled{
+    background-color: #82a4f3d9;
+    cursor: not-allowed;
+}
+.footer .cancelBtn{
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    border: 1px solid #cecece;
+    background-color: #fff;
+    color: #3a3a3a;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
+}

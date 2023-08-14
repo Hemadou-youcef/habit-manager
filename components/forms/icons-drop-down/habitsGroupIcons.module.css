@@ -1,0 +1,56 @@
+.habitActionButton{
+    position: relative;
+    
+}
+
+.habitActionButtonIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #e4e2e2;
+    background-color: #f7f7f7;
+    color: #7a7a7a;
+    font-size: 15px;
+    cursor: pointer;
+}
+.habitActionButtonIcon:active {
+    background-color: #d9d9d9;
+}
+.habitActionDropDown{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 150px;
+    padding: 5px;
+    margin-top: 10px;
+    background-color: #ebebeb;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.habitActionDropDownItem {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: #7a7a7a;
+    font-size: 12px;
+    cursor: pointer;
+    gap:10px;
+}
+.habitActionDropDownItem:hover {
+    background-color: #d9d9d9;
+}
+
+.habitIconItem{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+}
+.habitIconItem svg {
+    color: #7a7a7a;
+    cursor: pointer;
+}

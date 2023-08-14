@@ -2,7 +2,7 @@
 import Head from 'next/head'
 
 // React
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Fonts
 import { Inter } from 'next/font/google'
@@ -24,14 +24,22 @@ export default function Home({ habits }: { habits: Habit[][] | HabitWithProgress
   const [habitsList, setHabitsList] = useState<Habit[][] | HabitWithProgress[][]>(habits);
   const [loading, setLoading] = useState(false);
 
+  useEffect(()=>{
+    setHabitsList(habits);
+  },[habits])
+
   const handleRefreshHabitsList = () => {
+    setLoading(true);
     axios.get(`/api/today-habits`)
       .then((res) => {
-        console.log(res.data)
-        setHabitsList([res.data['goodHabits'], res.data['badHabits']]);
+
+        setHabitsList([res.data['goodHabits'], res.data['badHabits'], res.data['doneHabits'] ,res.data['failHabits']]);
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       })
   }
   return (
@@ -59,7 +67,7 @@ export async function getServerSideProps() {
   return {
     props: {
       habits: [
-        habits['goodHabits'], habits['badHabits']
+        habits['goodHabits'], habits['badHabits'], habits['doneHabits'],habits['failHabits']
       ]
     }
   }

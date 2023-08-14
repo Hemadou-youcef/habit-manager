@@ -1,0 +1,94 @@
+.animator {
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+}
+
+.fadeIn {
+    opacity: 1;
+}
+
+.fadeOut {
+    opacity: 0;
+}
+
+.slideIn {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.slideOut {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.slideInFromLeft {
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.slideOutToLeft {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.slideInFromRight {
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.slideOutToRight {
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+.slideInFromTop {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.slideOutToTop {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.slideInFromBottom {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.slideOutToBottom {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.shrinkIn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.shrinkOut {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.growIn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.growOut {
+    opacity: 0;
+    transform: scale(1.5);
+}
+
+/* Height  */
+.heightIn {
+    opacity: 1;
+    height: 100%;
+}
+
+.heightOut {
+    opacity: 0;
+    height: 0%;
+}
+

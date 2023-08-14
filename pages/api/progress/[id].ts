@@ -18,9 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'PUT':
                 // Validation of the request body
                 const {value} = req.body
-                if ( !value) {
-                    return res.status(400).json({ message: 'Missing parameter' })
-                }
+                // if (!value) {
+                //     return res.status(400).json({ message: 'Missing parameter' })
+                // }
                 // EDIT PROGRESS
                 const updateProgress = await prisma.progress.update({
                     where: {

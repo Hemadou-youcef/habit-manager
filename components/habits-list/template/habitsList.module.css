@@ -23,6 +23,7 @@
     display: flex;
     align-items: center;
     padding-right: 15px;
+    gap:10px;
 }
 .header .addButton {
     border-radius: 5px;
@@ -31,13 +32,24 @@
     background-color: #2a67f4;
     color: #fff;
     font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.header .editButton{
+    border-radius: 5px;
+    padding: 8px 10px;
+    border: 0;
+    background-color: #0ccf05;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
 }
 
 .habits {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    /* gap: 10px; */
     margin: 0;
     padding: 10px;
 }
@@ -49,17 +61,54 @@
     border-top: 1px solid #e4e2e2;
     width: 100%;
 }
+.noHabits,.loading{
+    padding: 10px;
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.habitsSections{
+    display: flex;
+    margin: 10px 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    gap: 0px;
+}
+.habitsSections button{
+    padding: 10px;
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 2px solid #3b3b3b;
+    color:rgb(51, 51, 51);
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.habitsSections button:hover{
+    background-color: #d4d4d4;
+}
+.habitsSections button.active{
+    background: #eee;
+}
 
 .habit {
     display: flex;
     position: relative;
     flex-direction: column;
     padding: 0px;
-    border-radius: 0px;
+    /* border-radius: 5px; */
+    height: 60px;
     background-color: #fff;
 }
 .habit:hover {
     background-color: #f5f5f5;
+}
+.habit.done {
+    /* border: 1px solid #ccc; */
+    background-color: #f7f7f7;
 }
 /* .habitDone {
     position: absolute;
@@ -70,14 +119,16 @@
     width: 100%;
     height: 3px;
     border-radius: 0px;
-    background-color: #333333;
+    background-color:   #333333;
     z-index: 1;
 } */
 .habitDetails {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid #e4e2e2;
     padding:0px 10px;
+    height: 100%;
 }
 .habitInfo {
     display: flex;
@@ -100,6 +151,7 @@
     flex-direction: column;
     gap: 5px;
     padding: 10px 0px;
+    width: 200px;
 }
 .habitName{
     font-weight: 500;
@@ -107,8 +159,10 @@
 }
 .habitActions {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     gap: 10px;
+    width: 150px;
 }
 .habitFillButton button{
     display: flex;
@@ -119,7 +173,7 @@
     border: 1px solid #e4e2e2;
     background-color: #f8f8f8;
     color: #000;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
     gap: 3px;
     cursor: pointer;
@@ -140,7 +194,7 @@
     padding: 7px 5px;
     border-radius: 5px;
     border: 1px solid #e4e2e2;
-    background-color: #ebebeb;
+    background-color: #f7f7f7;
     color: #7a7a7a;
     font-size: 15px;
     cursor: pointer;
@@ -154,28 +208,30 @@
     left: 0;
     width: 150px;
     margin-top: 10px;
-    background-color: #ebebeb;
-    border-radius: 5px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
 .habitActionDropDownItem {
     display: flex;
     align-items: center;
-    padding: 8px 10px;
-    border-radius: 5px;
+    padding: 10px 10px;
     color: #7a7a7a;
     font-size: 12px;
     cursor: pointer;
     gap:10px;
 }
 .habitActionDropDownItem:hover {
-    background-color: #d9d9d9;
+    background-color: #e9e9e9;
 }
 .habitProgress {
     position: relative;
+    width: 200px;
+    border: 1px solid #ccc;
     background-color: #e4e2e2;
-    height: 5px;
+    border-radius: 10px;
+    height: 30px;
     overflow: hidden;
 }
 .habitProgress .progress {
@@ -192,7 +248,7 @@
 }
 .progressDone {
     background-color: #2a67f4;
-    height: 5px;
+    height: 30px;
     width: 50%;
 }
 .habitProgress .progressText {
@@ -206,15 +262,21 @@
     color: #fff;
 }
 
-.badHabits {
+.subHabits {
     display: flex;
     align-items: center;
     gap: 10px;
     margin: 0;
     padding: 10px;
     font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     cursor: pointer;
 }
-.badHabits:hover {
+.subHabits:hover {
     color: #575757;
+}
+.subHabitsContent{
+    /* border-left: 10px solid #ccc; */
+    padding-left: 20px;
 }

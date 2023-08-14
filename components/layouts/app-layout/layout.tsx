@@ -13,28 +13,27 @@ import ProgressBar from '@/components/progress/progress'
 
 
 // Typescript Types
-// type User = {
-//     name: string,
-//     email: string,
-//     habitsGroups: {
-//         name: string,
-//         icon: string,
-//     }[]
-// }
+import { Habit, HabitsGroup } from '@/types';
 
 // Context
 const DataContext = createContext<any>(null);
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    const [selectedHabit, setSelectedHabit] = useState(null);
+    const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
+    const [habitsGroupList, setHabitsGroupList] = useState<HabitsGroup[]>([]);
 
-    const selectHabit = (habit: any) => {
+    const selectHabit = (habit: Habit) => {
         setSelectedHabit(habit);
+    }
+    const refreshGroupListData = (groupList : HabitsGroup[]) => {
+        setHabitsGroupList(groupList)
     }
     const dataContextValue = {
         selectedHabit,
         selectHabit,
+        habitsGroupList,
+        refreshGroupListData
     }
     return (
         <DataContext.Provider value={dataContextValue}>

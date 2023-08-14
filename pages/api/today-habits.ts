@@ -13,29 +13,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (req.method) {
             case 'GET':
+                // GET TODAY DATE
+                const today = new Date();
+                const startOfToday = startOfDay(today);
+                const endOfToday = endOfDay(today);
+
                 // GET USER HABITS THAT ARE NOT ARCHIVED
                 const todayHabits: Habit[] = await prisma.habits.findMany({
                     where: {
                         userId: 1,
                         isArchived: false,
+                        startDate: {
+                            lte: endOfToday
+                        }
+
                     },
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
                 })
 
-                // GET TODAY DATE
-                const today = new Date();
-                const startOfToday = startOfDay(today);
-                const endOfToday = endOfDay(today);
+
 
                 // FILTER TODAY HABITS
                 // IF GOALS PERIODICITY IS DAILY, THE VALUE LIKE THIS 'mon,tue,wed,thu,fri,sat,sun'
                 // IF GOALS PERIODICITY IS MONTHLY, THE VALUE LIKE THIS '1,...,31'
                 // IF GOALS PERIODICITY IS YEARLY, THE VALUE LIKE THIS 'jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec'
                 // SO WE NEED TO CHECK IF TODAY IS IN THE GOALS PERIODICITY VALUES
-                todayHabits.filter((habit: Habit) => {
+                let _todayHabits: Habit[] = todayHabits.filter((habit: Habit) => {
                     const goalsPeriodicityValues = habit.goalsPeriodicityValues.split(',');
+
                     switch (habit.goalsPeriodicity) {
                         case 'daily':
                             const todayDayName = today.toString().substr(0, 3).toLowerCase();
+                            console.log(goalsPeriodicityValues.includes(todayDayName))
                             return goalsPeriodicityValues.includes(todayDayName);
                         case 'monthly':
                             const todayDayNumber = today.getDay();
@@ -47,23 +58,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             return false;
                     }
                 })
+                console.log(_todayHabits.length)
 
                 // WE NEED TO SEPERATE GOOD HABITS AND BAD HABITS
+                const doneHabits: HabitWithProgress[] = [];
+                const failHabits: HabitWithProgress[] = [];
                 const goodHabits: HabitWithProgress[] = [];
                 const badHabits: HabitWithProgress[] = [];
 
-
                 // GET PROGRESS IF EXISTS, IF NOT CREATE IT
-                await Promise.all(todayHabits.map(async (habit: Habit) => {
-                    const progress = await findHabitProgress(habit.id, startOfToday, endOfToday);
+                await Promise.all(_todayHabits.map(async (habit: Habit) => {
+                    const progress = await findHabitProgress(habit.type, habit.id, startOfToday, endOfToday);
                     if (!progress) throw new Error('Progress not found');
-                    const newHabit: HabitWithProgress = { ...habit, progress };
 
-                    if (habit.type == 'good') goodHabits.push(newHabit);
+                    const newHabit: HabitWithProgress = { ...habit, progress };
+                    const isProgressDone = (habit.type == 'good') ? habit.goalsValue <= progress.value : false;
+                    const isProgressFail = (habit.type == 'bad') ? progress.value == 0 : false;
+                    if (isProgressDone) doneHabits.push(newHabit);
+                    else if (isProgressFail) failHabits.push(newHabit);
+                    else if (habit.type == 'good') goodHabits.push(newHabit);
                     else badHabits.push(newHabit);
                 }))
 
-                return res.status(200).json({ goodHabits, badHabits })
+                return res.status(200).json({ doneHabits, failHabits, goodHabits, badHabits })
             default:
                 return res.status(405).json({ message: 'Method not allowed' })
         }
@@ -74,7 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 
-const findHabitProgress = async (habitId: number, startOfToday: Date, endOfToday: Date) => {
+const findHabitProgress = async (habitType: string, habitId: number, startOfToday: Date, endOfToday: Date) => {
     try {
         // GET PROGRESS IF EXISTS
         const progress: Progress | null = await prisma.progress.findFirst({
@@ -92,7 +109,7 @@ const findHabitProgress = async (habitId: number, startOfToday: Date, endOfToday
             const newProgress = await prisma.progress.create({
                 data: {
                     habitId: habitId,
-                    value: 0,
+                    value: habitType == 'good' ? 0 : 1,
                     createdAt: new Date()
                 }
             })

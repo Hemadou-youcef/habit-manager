@@ -3,6 +3,7 @@
 export type HabitsGroup = {
     id: number;
     name: string;
+    icon: string;
     habits?: Habit[];
     createdAt: Date;
     updatedAt: Date;
@@ -10,7 +11,7 @@ export type HabitsGroup = {
 
 export type Habit = {
     id: number;
-    habitsGroupId?: number;
+    habitGroupId: number | null;
     name: string;
     type: string;
     startDate: Date;
@@ -28,7 +29,7 @@ export type Habit = {
 
 export type HabitWithProgress = {
     id: number;
-    habitsGroupId?: number;
+    habitGroupId: number | null;
     name: string;
     type: string;
     startDate: Date;

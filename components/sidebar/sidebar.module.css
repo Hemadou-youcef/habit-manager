@@ -42,7 +42,7 @@
     color: #7a7a7a
 }
 .sections:hover a {
-    color: #00153d;
+    color: #1a1a1a;
 }
 .sections .active{
     background-color: #2a67f4;
@@ -61,7 +61,7 @@
 .sectionElement:hover:not(.active){
     /* background-color: #2a67f4; */
     background-color: #eeeeee;
-    color: #00153d;
+    color: #1a1a1a;
 }
 
 .sectionElement p {
@@ -73,18 +73,4 @@
 .sectionElementName{
     display: flex;
     gap: 10px;
-}
-.loginBtn{
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #5783db;
-    background-color: #4264a8;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-}
-.loginBtn:active{
-    background-color: #1a3980;
 }

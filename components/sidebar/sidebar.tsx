@@ -17,12 +17,16 @@ import { MdToday } from 'react-icons/md'
 import styles from './sidebar.module.css'
 
 // Components
-// import axios from "@/components/library/axios"
+import useSWR, { mutate } from 'swr';
 import { useAuth } from '@/components/layouts/auth-layout/authProvider';
+import { useDataContext } from '../layouts/app-layout/layout';
 import Settings from '../settings/settings';
-import HabitsGroup from '../forms/habits-group-form/habit-form/habitsGroup';
+import HabitsGroupForm from '../forms/habits-group-form/habit-form/habitsGroupForm';
+import ElementAnimator from '../features/element-animator/elementAnimator';
 
 // Typescript Types
+import { HabitsGroup } from '@prisma/client';
+
 type UserInfo = {
     name: string,
     email: string,
@@ -31,17 +35,17 @@ type UserLoginInfo = {
     email: string,
     password: string,
 }
-type HabitsGroups = {
-    id: number,
-    name: string,
-    icon: string,
+const getUserHabitsGroups = async () => {
+    const response = await fetch('/api/habits-group');
+    const data = await response.json();
+    // setHabitsGroups(data)
+    return data;
 }
-
-
 
 const SideBar = () => {
     const { user, login, logOut }: { user: UserInfo, login: (user: UserLoginInfo) => void, logOut: () => void } = useAuth();
-    const [habitsGroups, setHabitsGroups] = useState<HabitsGroups[] | null>(null)
+    const { habitsGroupList, refreshGroupListData }: { habitsGroupList: HabitsGroup[], refreshGroupListData: (hb: HabitsGroup) => void } = useDataContext()
+    const { data: habitsGroups, error } = useSWR('/api/habits-group', getUserHabitsGroups);
 
     // Hooks
     const currentRoute = usePathname();
@@ -51,15 +55,12 @@ const SideBar = () => {
     const [showSettings, setShowSettings] = useState(false);
 
     useEffect(() => {
-        getUserHabitsGroups();
-    }, [])
+        mutate('/api/habits-group').then((res) => {
+            refreshGroupListData(res);
+        })
+    }, [habitsGroups])
 
-    const getUserHabitsGroups = async () => {
-        const response = await fetch('/api/habits-group?hihi=sdfsd');
-        const data = await response.json();
-        setHabitsGroups(data)
-        
-    }
+
 
     return (
         <>
@@ -88,7 +89,7 @@ const SideBar = () => {
                     <p>
                         Habits Groups
                     </p>
-                    {habitsGroups && habitsGroups.map((group, index) => (
+                    {habitsGroupList && (habitsGroupList as HabitsGroup[]).map((group, index) => (
                         <Link href={`/habits-group/${group.id}`} key={index}>
                             <div className={`${styles.sectionElement} ${currentRoute === `/habits-group/${group.id}` ? styles.active : ''}`}>
                                 <FaFolder size={20} />
@@ -120,8 +121,16 @@ const SideBar = () => {
                     </div>
                 </div>
             </div>
-            {showHabitsGroupForm && <HabitsGroup closeForm={() => {setShowHabitsGroupForm(false);getUserHabitsGroups();}} />}
-            {showSettings && <Settings closeForm={() => setShowSettings(false)} />}
+            <ElementAnimator showElement={showHabitsGroupForm} type={0} duration={300}>
+                <HabitsGroupForm
+                    editMode={false}
+                    editHabitsGroup={() => { }}
+                    closeForm={() => { setShowHabitsGroupForm(false); mutate('/api/habits-group') }}
+                />
+            </ElementAnimator>
+            <ElementAnimator showElement={showSettings} type={0} duration={300}>
+                <Settings closeForm={() => setShowSettings(false)} />
+            </ElementAnimator>
         </>
     );
 }

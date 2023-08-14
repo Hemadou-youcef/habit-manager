@@ -1,0 +1,42 @@
+.content{
+    padding: 0px;
+    margin: 0px;
+}
+.habitCard{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: white;
+    gap: 10px;
+}
+.habitCardItem{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+}
+.habitIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ebebeb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f3f3f3;
+}
+.habitName {
+    font-size: 28px;
+    font-weight: 500;
+}
+.habitInfoTable{
+    width: 100%;
+    padding: 10px;
+}
+.habitInfoTable th{
+    color: #464646;
+    width: 100px;
+}
+.habitInfoTable th,.habitInfoTable td{
+    text-align: left;
+}

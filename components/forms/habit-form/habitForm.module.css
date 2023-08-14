@@ -1,3 +1,17 @@
+.bg_green {
+    background-color: #19db2a !important;
+    color: white;
+}
+
+.bg_green:active {
+    background-color: #55f362 !important;
+}
+
+.bg_green:disabled {
+    background-color: #9ae98f !important;
+}
+
+
 .habitForm{
     padding: 0px;
     margin: 0px;
@@ -127,7 +141,10 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border: 1px solid #e4e2e2;
+    border: 3px solid #e4e2e2;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    overflow: hidden;
 }
 .body .form .formGroup .options .option{
     padding: 10px;
