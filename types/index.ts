@@ -43,7 +43,7 @@ export type HabitWithProgress = {
     createdAt: Date;
     updatedAt: Date;
     shareLink: string;
-    progress: Progress;
+    progress: Progress | Progress[];
 }
 
 export type Progress = {
@@ -52,4 +52,14 @@ export type Progress = {
     value: number;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export type Session = {
+    user?: {
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+        id?: string | null;
+    }
+    expires: Date
 }

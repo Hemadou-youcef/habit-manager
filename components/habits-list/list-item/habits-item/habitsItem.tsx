@@ -16,15 +16,14 @@ import ElementAnimator from "@/components/features/element-animator/elementAnima
 import { Habit, HabitWithProgress, HabitsGroup } from "@/types";
 type HabitsItem = {
     title: string;
-    backgroundColor: string;
     isOpen: boolean;
-    habitList: HabitsGroup[];
+    habitList: (Habit | HabitWithProgress)[];
     readOnly: boolean;
     handleEditHabit: (habit: Habit) => void;
-    handleEditHabitProgress: (habit: HabitWithProgress, _mustReplace: boolean) => void;
+    handleEditHabitProgress: (habit: HabitWithProgress) => void;
 }
 
-const HabitsItem = ({ title, backgroundColor, isOpen = true, habitList, readOnly, handleEditHabit, handleEditHabitProgress }: HabitsItem) => {
+const HabitsItem = ({ title, isOpen = true, habitList, readOnly, handleEditHabit, handleEditHabitProgress }: HabitsItem) => {
     const [showHabits, setShowHabits] = useState<boolean>(isOpen);
     // #16ff5033
     return (

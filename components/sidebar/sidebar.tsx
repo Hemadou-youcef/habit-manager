@@ -18,14 +18,18 @@ import styles from './sidebar.module.css'
 
 // Components
 import useSWR, { mutate } from 'swr';
-import { useAuth } from '@/components/layouts/auth-layout/authProvider';
+// import { useAuth } from '@/components/layouts/auth-layout/authProvider';
 import { useDataContext } from '../layouts/app-layout/layout';
 import Settings from '../settings/settings';
 import HabitsGroupForm from '../forms/habits-group-form/habit-form/habitsGroupForm';
 import ElementAnimator from '../features/element-animator/elementAnimator';
+import HabitsgroupsIcons from '../forms/icons-drop-down/habitsGroupIcons';
 
 // Typescript Types
 import { HabitsGroup } from '@prisma/client';
+
+// Auth
+import { useSession, signIn, signOut } from "next-auth/react"
 
 type UserInfo = {
     name: string,
@@ -43,7 +47,8 @@ const getUserHabitsGroups = async () => {
 }
 
 const SideBar = () => {
-    const { user, login, logOut }: { user: UserInfo, login: (user: UserLoginInfo) => void, logOut: () => void } = useAuth();
+    const { data: session,status } = useSession()
+    // const { user, login, logOut }: { user: UserInfo, login: (user: UserLoginInfo) => void, logOut: () => void } = useAuth();
     const { habitsGroupList, refreshGroupListData }: { habitsGroupList: HabitsGroup[], refreshGroupListData: (hb: HabitsGroup) => void } = useDataContext()
     const { data: habitsGroups, error } = useSWR('/api/habits-group', getUserHabitsGroups);
 
@@ -57,31 +62,52 @@ const SideBar = () => {
     useEffect(() => {
         mutate('/api/habits-group').then((res) => {
             refreshGroupListData(res);
+            console.log(res)
         })
     }, [habitsGroups])
 
+    if(status === 'loading'){
+        return (
+            <div className={styles.skeletonSideBar}>
+                <div className={styles.user}></div>
+                <div className={styles.sections}>
 
-
+                </div>
+            </div>
+            )
+    }
+    if (status === "unauthenticated") {
+        return (
+            <div className={styles.main}>
+                <div className={styles.sections}>
+                    <div className={`${styles.sectionElement}`} onClick={() => signIn()}>
+                        <MdToday size={18} />
+                        <p>Login</p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
     return (
         <>
             <div className={styles.main}>
                 <div className={styles.userCard}>
-                    <Image src="https://userprofile.habitify.me/qTR4BX3dkQZOacaXiql0c7uiYQv1%2FprofileImage.jpg?alt=media&token=d336f72d-4af4-4df5-ac9d-390fdb3d2352" alt="Picture of the author" width={26} height={30} />
+                    <Image src={session?.user?.image || '#'} alt="Picture of the author" width={26} height={26} />
                     <p>
-                        {user.name}
+                        {session?.user?.name}
                     </p>
                 </div>
                 <div className={styles.sections}>
                     <Link href="/">
                         <div className={`${styles.sectionElement} ${currentRoute === '/' ? styles.active : ''}`}>
-                            <MdToday size={20} />
+                            <MdToday size={18} />
                             <p>Today Habits</p>
                         </div>
                     </Link>
-                    <Link href="/all-habits">
-                        <div className={`${styles.sectionElement} ${currentRoute === '/all-habits' ? styles.active : ''}`}>
-                            <BiSolidArchive size={20} />
-                            <p>All Habits</p>
+                    <Link href="/manage-habits">
+                        <div className={`${styles.sectionElement} ${currentRoute === '/manage-habits' ? styles.active : ''}`}>
+                            <BiSolidArchive size={18} />
+                            <p>Manage Habits</p>
                         </div>
                     </Link>
                 </div>
@@ -92,7 +118,12 @@ const SideBar = () => {
                     {habitsGroupList && (habitsGroupList as HabitsGroup[]).map((group, index) => (
                         <Link href={`/habits-group/${group.id}`} key={index}>
                             <div className={`${styles.sectionElement} ${currentRoute === `/habits-group/${group.id}` ? styles.active : ''}`}>
-                                <FaFolder size={20} />
+                                <HabitsgroupsIcons
+                                    currentIcon={group.icon}
+                                    showOnlyMode={true}
+                                    type={'group'}
+                                    onIconChange={(value: string) => { }}
+                                />
                                 <p>{group.name}</p>
                             </div>
                         </Link>
@@ -112,11 +143,11 @@ const SideBar = () => {
                         className={`${styles.sectionElement} ${currentRoute === '/settings' ? styles.active : ''}`}
                         onClick={() => setShowSettings(true)}
                     >
-                        <AiTwotoneSetting size={20} />
+                        <AiTwotoneSetting size={18} />
                         <p>Settings</p>
                     </div>
-                    <div className={styles.sectionElement} onClick={() => logOut()}>
-                        <IoLogOutOutline size={20} />
+                    <div className={styles.sectionElement} onClick={() => signOut()}>
+                        <IoLogOutOutline size={18} />
                         <p>Logout</p>
                     </div>
                 </div>

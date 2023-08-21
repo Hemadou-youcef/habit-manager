@@ -1,31 +1,39 @@
+// Next
+import { useRouter } from "next/router";
 
 // React 
 import { useEffect, useState } from "react";
 
 // Components
 import axios from "axios";
-import HabitsList from "@/components/habits-list/template/habitsList";
+import HabitsList from "@/components/habits-list/template/habit-list/habitsList";
 
 // Typescript Types
 import { Habit, HabitWithProgress, HabitsGroup } from "@/types";
 
 
-const habitsGroup = ({ habitsGroup, habits }: { habitsGroup: HabitsGroup, habits: Habit[][] }) => {
-    const [habitsList, setHabitsList] = useState<Habit[][] | HabitWithProgress[][]>(habits);
+
+const habitsGroup = () => {
+    const router = useRouter();
+    const { id } = router.query;
+
+    const [habitsGroup, setHabitsGroup] = useState<HabitsGroup>();
+    const [habitsList, setHabitsList] = useState<Habit[][] | HabitWithProgress[][]>([[], [], [], []]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setHabitsList(habits);
-    }, [habits])
+        if(!router.isReady) return;
+        handleRefreshHabitsList();
+    }, [router.isReady])
 
     const handleRefreshHabitsList = () => {
         setLoading(true);
-        axios.get(`/api/habits-group/${habitsGroup.id}`)
+        axios.get(`/api/habits-group/${id}`)
             .then((res) => {
                 const data = res.data;
-                console.log(data)
                 const goodHabits = data.habits.filter((habit: Habit) => habit.type === 'good');
                 const badHabits = data.habits.filter((habit: Habit) => habit.type === 'bad');
+                setHabitsGroup(data);
                 setHabitsList([goodHabits, badHabits, [], []]);
             })
             .catch((err) => {
@@ -35,7 +43,7 @@ const habitsGroup = ({ habitsGroup, habits }: { habitsGroup: HabitsGroup, habits
                 setLoading(false);
             })
     }
-
+    if (!habitsGroup) return <></>;
     return (
         <>
             <HabitsList
@@ -43,6 +51,7 @@ const habitsGroup = ({ habitsGroup, habits }: { habitsGroup: HabitsGroup, habits
                 habits={habitsList}
                 habitsGroup={habitsGroup}
                 readOnly={true}
+                onChangeDate={(date) => { }}
                 refresh={() => handleRefreshHabitsList()}
                 loading={loading}
             />
@@ -51,24 +60,3 @@ const habitsGroup = ({ habitsGroup, habits }: { habitsGroup: HabitsGroup, habits
 }
 
 export default habitsGroup;
-
-export async function getServerSideProps(context: any) {
-    const { id } = context.params;
-    const response = await fetch(`${process.env.BASE_URL}/api/habits-group/${id}`);
-    const habitsGroup = await response.json();
-    if (!habitsGroup) {
-        return {
-            notFound: true,
-        }
-    }
-    const goodHabits = habitsGroup.habits.filter((habit: Habit) => habit.type === 'good');
-    const badHabits = habitsGroup.habits.filter((habit: Habit) => habit.type === 'bad');
-    return {
-        props: {
-            habitsGroup,
-            habits: [
-                goodHabits, badHabits, [], []
-            ]
-        }
-    }
-}

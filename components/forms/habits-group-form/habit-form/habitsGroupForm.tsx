@@ -7,26 +7,29 @@ import styles from './habitsGroupForm.module.css';
 // Components
 import axios from 'axios';
 import { useDataContext } from '@/components/layouts/app-layout/layout';
-import Overlay from '@/components/overlay/overlay';
+import Overlay from '@/components/features/overlay/overlay'
 import HabitsGroupIcons from '@/components/forms/icons-drop-down/habitsGroupIcons';
 import { BiDotsVertical } from 'react-icons/bi';
 
 // Typescript Types
 import { HabitsGroup } from '@/types';
+import ElementAnimator from '@/components/features/element-animator/elementAnimator';
+import Alert from '@/components/features/alert/alert';
 
 type HabitGroupForm = {
     data?: HabitsGroup,
     editMode: boolean
-    editHabitsGroup: (habitsGroup: HabitsGroup) => void;
+    editHabitsGroup: (habitsGroup: HabitsGroup | null) => void;
     closeForm: () => void;
 }
 const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGroupForm) => {
     const { habitsGroupList, refreshGroupListData } = useDataContext();
     const [groupInfo, setGroupInfo] = useState({
         name: data?.name || '',
-        icon: data?.icon || ''
+        icon: data?.icon || 'FaFolder'
     });
     const [loading, setLoading] = useState(false);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false);
     const [cleanUpVariable, setCleanUpVariable] = useState(false)
 
     const handleSubmit = () => {
@@ -63,6 +66,17 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
 
     }
 
+    const handleDelete = () => {
+        setLoading(true);
+        axios.delete(`/api/habits-group/${data?.id}`)
+            .then((res) => {
+                editHabitsGroup(null);
+                closeForm();
+            })
+            .catch((err) => console.log(err))
+            .finally(() => setLoading(false));
+    }
+
     return (
         <Overlay width="500px" closeOverlay={() => closeForm()} closeOnBackgroundClick={true}>
             <div className={styles.habitForm}>
@@ -86,23 +100,43 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
                                 value={groupInfo.icon}
                                 onChange={(e) => setGroupInfo({ ...groupInfo, icon: e.target.value })}
                             /> */}
-                            <HabitsGroupIcons currentIcon='folder' onIconChange={(value: string) => { }} type={'group'} />
+                            <HabitsGroupIcons
+                                currentIcon={groupInfo.icon}
+                                showOnlyMode={false}
+                                type={'group'}
+                                onIconChange={(value: string) => { setGroupInfo({ ...groupInfo, icon: value }) }} />
                         </div>
                     </form>
                 </div>
                 <div className={styles.footer}>
-                    <button className={styles.cancelBtn} onClick={() => closeForm()}>
-                        Cancel
-                    </button>
-                    <input
-                        type="submit"
-                        value={loading ? 'Loading...' : editMode ? 'Edit' : 'Save'}
-                        className={`${styles.submit} ${editMode ? styles.bg_green : ""}`}
-                        onClick={() => handleSubmit()}
-                        disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
-                    />
+                    <div>
+                        {editMode &&
+                            <button className={styles.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
+                                Delete
+                            </button>
+                        }
+                    </div>
+                    <div className={styles.mainAction}>
+                        <button className={styles.cancelBtn} onClick={() => closeForm()}>
+                            Cancel
+                        </button>
+                        <input
+                            type="submit"
+                            value={loading ? 'Loading...' : editMode ? 'Edit' : 'Save'}
+                            className={`${styles.submit} ${editMode ? styles.bg_green : ""}`}
+                            onClick={() => handleSubmit()}
+                            disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
+                        />
+                    </div>
                 </div>
             </div>
+            <ElementAnimator showElement={showDeleteConfirmation} type={0} duration={300}>
+                <Alert
+                    text='Are you sure you want to delete this Group?'
+                    onCancel={() => { setShowDeleteConfirmation(false) }}
+                    onConfirm={handleDelete}
+                />
+            </ElementAnimator>
         </Overlay>
     );
 }

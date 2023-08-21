@@ -1,20 +1,43 @@
-.content{
+.content {
     padding: 0px;
     margin: 0px;
+    height: 100vh;
+    background-color: white;
 }
-.habitCard{
+
+.habitCard {
     display: flex;
     flex-direction: column;
-    padding: 10px;
     background-color: white;
     gap: 10px;
 }
-.habitCardItem{
+
+.returnButton {
+    display: flex;
+    padding: 5px 10px;
+    margin: 0px;
+    border: 0px;
+    border-radius: 5px;
+    background-color: #7c7c7c;
+    color: white;
+    cursor: pointer;
+}
+
+.returnButton:hover {
+    background-color: #6e6e6e;
+}
+
+.returnButton:active {
+    background-color: #555555;
+}
+
+.habitCardItem {
     display: flex;
     align-items: center;
     gap: 10px;
-
+    padding: 10px;
 }
+
 .habitIcon {
     width: 40px;
     height: 40px;
@@ -25,18 +48,163 @@
     justify-content: center;
     color: #f3f3f3;
 }
+
 .habitName {
-    font-size: 28px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 600;
 }
-.habitInfoTable{
+
+.habitInfoTable {
     width: 100%;
     padding: 10px;
 }
-.habitInfoTable th{
+
+.habitInfoTable th {
     color: #464646;
     width: 100px;
 }
-.habitInfoTable th,.habitInfoTable td{
+
+.habitInfoTable th,
+.habitInfoTable td {
     text-align: left;
+    padding: 5px;
+}
+
+.habitInfoTable td {
+    color: #1b1b1b;
+    font-weight: 500;
+}
+
+.habitInfoTable td span {
+    font-weight: 500;
+}
+
+
+.habitsSections {
+    display: flex;
+    margin: 0;
+    /* background-color: #fafafa; */
+    overflow: hidden;
+    gap: 0px;
+}
+
+.habitsSections button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 2px solid #3b3b3b;
+    color: rgb(51, 51, 51);
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.habitsSections button:hover {
+    background-color: #eeeeee;
+}
+
+.habitsSections button.active {
+    color: #2a67f4;
+    border-color: #2a67f4;
+    background: #eee;
+}
+
+.habitProgress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.habitProgressItem {
+    display: flex;
+    align-items: center;
+    border: 1px solid #3a3a3a;
+    background-color: #fff;
+    border-radius: 10px;
+    width: 150px;
+    padding: 10px;
+}
+
+.habitProgressItemTitle {
+    margin: 0;
+    color: #464646;
+}
+
+.habitProgressItemTitle p {
+    font-size: 23px;
+    font-weight: 500;
+    margin: 0;
+    color: #464646;
+}
+
+.habitProgressItemValue {
+    padding: 10px;
+}
+
+.habitProgressItemValue p {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    color: #1b1b1b;
+}
+
+.loading {
+    padding: 10px;
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.InformationSection {
+    padding: 10px;
+}
+
+.mainInformation {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainInformation .informationItem {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #a5a5a5;
+    border-radius: 5px;
+    width: 100%;
+    gap: 10px;
+    padding: 10px;
+    margin: 0px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.mainInformation .informationItem p {
+    margin: 0;
+}
+
+.mainInformation .informationItem p:first-child {
+    font-weight: 600;
+    color: #525252;
+}
+
+.mainInformation .informationItem p:last-child {
+    text-transform: capitalize;
+    color: #313131;
+}
+
+
+.statisticsSection {
+    overflow-y: auto;
+    max-height: 500px;
+    scrollbar-gutter: stable;
 }

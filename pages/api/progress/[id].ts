@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import { getServerSession } from "next-auth/next"
 
 const prisma = new PrismaClient()
 
 // Typescript types
-import { HabitsGroup, Habit } from '@/types/index'
+import { Session } from '@/types/index'
 
 // catch error type
 type ErrorType = {
@@ -13,6 +15,8 @@ type ErrorType = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session: Session | null = await getServerSession(req, res, authOptions)
+    if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         switch (req.method) {
             case 'PUT':

@@ -23,7 +23,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
     const [habitsGroupList, setHabitsGroupList] = useState<HabitsGroup[]>([]);
 
-    const selectHabit = (habit: Habit) => {
+    const selectHabit = (habit: Habit | null) => {
         setSelectedHabit(habit);
     }
     const refreshGroupListData = (groupList : HabitsGroup[]) => {

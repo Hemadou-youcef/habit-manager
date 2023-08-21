@@ -1,0 +1,85 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #e4e2e2;
+    margin-bottom: 0px;
+    width: 100%;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+}
+.title p{
+    margin: 0;
+    padding: 15px;
+}
+.title .addButton {
+    display: flex;
+    border-radius: 5px;
+    padding: 10px;
+    margin-right: 15px;
+    border: 0;
+    background-color: #2a67f4;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.habitsSections {
+    display: flex;
+    border-radius: 5px;
+    gap: 0px;
+    width: 100%;
+    padding: 10px;
+}
+
+.habitsSections button {
+    padding: 10px;
+    background-color: transparent;
+    border: 0px;
+    border-bottom: 2px solid #3b3b3b;
+    color: rgb(51, 51, 51);
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.habitsSections button:hover {
+    background-color: #f0f0f0;
+}
+
+.habitsSections button.active {
+    background: #eee;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+    margin: 0;
+    padding: 10px;
+}
+.noHabits,
+.loading {
+    padding: 10px;
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}

@@ -2,14 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'userprofile.habitify.me',
-        port: '',
-        pathname: '/**',
-      }
-    ],
+    domains: ['lh3.googleusercontent.com'],
   },
 }
 

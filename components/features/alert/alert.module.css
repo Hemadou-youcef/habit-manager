@@ -1,0 +1,36 @@
+.content{
+    padding: 20px;
+    margin: 0;
+}
+.question{
+    padding: 0px 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+}
+.actions{
+    display: flex;
+    justify-content: space-around;
+}
+.actions button{
+    display: flex;
+    padding: 5px;
+    border:1px solid black;
+    border-radius: 100%;
+    background-color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+.actions button:hover{
+    background-color: rgb(233, 233, 233);
+}
+.actions button:last-child{
+    border: 1px solid #dd4343;
+    background-color: white;
+    color: #dd4343;
+}
+
+.actions button:last-child:hover{
+    background-color: #fdd7d7;
+}

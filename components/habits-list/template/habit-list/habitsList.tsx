@@ -6,43 +6,52 @@ import styles from './habitsList.module.css';
 
 // Icons 
 import { AiFillEdit, AiOutlinePlus } from 'react-icons/ai';
+import { FiCalendar } from 'react-icons/fi';
 
 // Components
-import HabitsItem from '../list-item/habits-item/habitsItem'
-import HabitItem from '../list-item/habit-item/habitItem'
-import HabitForm from '@/components/forms/habit-form/habitForm'
-import HabitsGroupForm from '@/components/forms/habits-group-form/habit-form/habitsGroupForm'
+import HabitsItem from '../../list-item/habits-item/habitsItem';
+import HabitForm from '@/components/forms/habit-form/habitForm';
+import HabitsGroupForm from '@/components/forms/habits-group-form/habit-form/habitsGroupForm';
+import ElementAnimator from '@/components/features/element-animator/elementAnimator';
+import Overlay from '@/components/features/overlay/overlay';
+import Calendar from 'react-calendar';
 
 // Typescript Types
-import { HabitsGroup, Habit, HabitWithProgress, Progress } from '@/types/index'
-import ElementAnimator from '@/components/features/element-animator/elementAnimator';
+import { HabitsGroup, Habit, HabitWithProgress, Progress } from '@/types/index';
 type habitList = {
     title: string;
     habitsGroup?: HabitsGroup;
     readOnly: boolean;
     habits: Habit[][] | HabitWithProgress[][];
     loading: boolean;
-    refresh: () => void
+    onChangeDate: (date: Date) => void;
+    refresh: () => void;
 }
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 // Configuration
 const habitSectionConfiguration = [
-    [0, 'Good', '#1ec448', true],
-    [1, 'Bad', '#ff2828', true],
-    [2, 'Done', '#333', false],
-    [3, 'Fail', '#333', false],
+    [0, 'Good', true],
+    [1, 'Bad', true],
+    [2, 'Done', true],
+    [3, 'Fail', true],
 ]// [Section Index, Title, Background Color, Is Open or No]
 
-const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: habitList) => {
+const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDate, refresh }: habitList) => {
     const [habitsGroupInfo, setHabitsGroupInfo] = useState<HabitsGroup | undefined>(habitsGroup)
     const [habitList, setHabitList] = useState<Habit[][] | HabitWithProgress[][]>(habits);
-    const [currentHabitSection, setCurrentHabitSection] = useState([habitSectionConfiguration[0], habitSectionConfiguration[1]])
+    const [currentHabitSection, setCurrentHabitSection] = useState([habitSectionConfiguration[0], habitSectionConfiguration[1]]);
+    const [currentDate, setCurrentDate] = useState<Value>(new Date());
 
     const [showHabitsGroupForm, setShowHabitsGroupForm] = useState<boolean>(false);
+    const [showCalendar, setShowCalendar] = useState<boolean>(false);
 
     const [showHabitForm, setShowHabitForm] = useState<boolean>(false);
     const [habitEditData, setHabitEditData] = useState<Habit | null>(null);
     const [habitEditMode, setHabitEditMode] = useState<boolean>(false);
+
+    // const redirect = usedi
 
     useEffect(() => {
         setHabitList(habits);
@@ -52,8 +61,16 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
         setHabitsGroupInfo(habitsGroup);
     }, [habitsGroup]);
 
-    const handleEditHabitsGroup = (habitsGroup: HabitsGroup): void => {
-        setHabitsGroupInfo(habitsGroup)
+    function formatDate(date: Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    const handleEditHabitsGroup = (habitsGroup: HabitsGroup | null): void => {
+        if (habitsGroup) setHabitsGroupInfo(habitsGroup)
+        // else redirect()
     }
 
     const handleEditHabit = (habit: Habit): void => {
@@ -62,11 +79,24 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
         setShowHabitForm(true)
     }
 
-    const handleEditHabitProgress = (section: string, habit: Habit, _mustReplace: boolean): boolean => {
-        console.log(_mustReplace);
+    const resetValues = (): void => {
+        setShowHabitsGroupForm(false)
+        setShowCalendar(false)
+        setShowHabitForm(false)
+        setHabitEditData(null)
+        setHabitEditMode(false)
+    }
+
+    const handleEditHabitProgress = (section: string, habit: HabitWithProgress): boolean => {
+
         ['Good', 'Bad', 'Done', 'Fail'].forEach((value, index) => {
             // IF THE HABIT NOT FROM THIS SECTION IGNORE IT
             if (value != section) return;
+
+            // CHECK IF THE HABIT MUST BE REPLACED TO ANOTHER SECTION
+            let _mustReplace = false;
+            if (habit.type == 'bad') _mustReplace = true
+            else _mustReplace = ((habit.progress as Progress).value >= habit.goalsValue && habit.goalsValue > 0) || ((habit.progress as Progress).value == 0 && value == 'Done');
 
             // SEARCH FOR THE HABIT IN THIS CURRENT SECTION
             const HabitIndex = habitList[index].findIndex((h) => h.id === habit.id);
@@ -86,6 +116,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
                 setHabitList(newHabitLists);
             }
         })
+        resetValues()
         return false;
     }
 
@@ -95,12 +126,20 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
                 <div className={styles.header}>
                     <p className={styles.title}>{habitsGroupInfo?.name || title}</p>
                     <div className={styles.actions}>
-                        {habitsGroupInfo?.id &&
-                            <button className={styles.editButton} onClick={() => setShowHabitsGroupForm(true)}>
+                        {habitsGroupInfo?.id ? (
+                            <button className={styles.editHabitButton} onClick={() => setShowHabitsGroupForm(true)}>
                                 <AiFillEdit size={15} />
                                 {/* Edit Group */}
                             </button>
-                        }
+                        ) : (
+                            <button
+                                className={styles.editDateButton}
+                                onClick={() => setShowCalendar(!showCalendar)}
+                            >
+                                <FiCalendar size={15} />
+                                {formatDate(currentDate as Date)}
+                            </button>
+                        )}
                         <button className={styles.addButton} onClick={() => setShowHabitForm(true)}>
                             <AiOutlinePlus size={15} />
                             {/* Add Habits */}
@@ -141,11 +180,10 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
 
                                     <HabitsItem
                                         title={`${value[1]} Habits`}
-                                        backgroundColor={value[2] as string}
-                                        isOpen={value[3] as boolean}
+                                        isOpen={value[2] as boolean}
                                         habitList={habitList[value[0] as number]}
                                         handleEditHabit={handleEditHabit}
-                                        handleEditHabitProgress={(habit: Habit, _mustReplace: boolean) => handleEditHabitProgress(value[1] as string, habit, _mustReplace)}
+                                        handleEditHabitProgress={(habit: HabitWithProgress) => handleEditHabitProgress(value[1] as string, habit)}
                                         readOnly={readOnly}
                                         key={index}
                                     />
@@ -160,7 +198,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
                     data={habitsGroupInfo as HabitsGroup}
                     editMode={true}
                     editHabitsGroup={handleEditHabitsGroup}
-                    closeForm={() => setShowHabitsGroupForm(false)}
+                    closeForm={() => resetValues()}
                 />
             </ElementAnimator>
             <ElementAnimator showElement={showHabitForm} type={0} duration={300}>
@@ -169,8 +207,13 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, refresh }: 
                     data={habitEditData}
                     editMode={habitEditMode}
                     refresh={() => refresh()}
-                    closeForm={() => setShowHabitForm(false)}
+                    closeForm={() => resetValues()}
                 />
+            </ElementAnimator>
+            <ElementAnimator showElement={showCalendar} type={0} duration={300}>
+                <Overlay closeOverlay={() => setShowCalendar(!showCalendar)} closeOnBackgroundClick>
+                    <Calendar onChange={(value) => { setCurrentDate(value); onChangeDate(value as Date); setShowCalendar(!showCalendar) }} value={currentDate} />
+                </Overlay>
             </ElementAnimator>
         </>
     );

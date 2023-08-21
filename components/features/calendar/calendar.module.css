@@ -1,0 +1,115 @@
+.centerElement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    padding: 0px;
+    border: 2px solid #c0c0c0;
+    border-radius: 10px;
+}
+
+.content p {
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 5px;
+}
+
+.header>p {
+    font-weight: 600;
+    text-transform: capitalize;
+    cursor: pointer;
+}
+
+.header .options {
+    display: flex;
+    align-items: center;
+}
+
+.options .options_today {
+    padding: 10px;
+    border: 1px solid #353535;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.options_chevron {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+
+.selected {
+    background-color: #2a67f4;
+    color: white;
+}
+
+.monthDays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 5px;
+}
+
+.monthDays>div {
+    padding: 10px;
+    border-radius: 10px;
+    height: 50px;
+    width: 60px;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #2a67f4;
+    color: white;
+}
+
+.yearGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.yearCell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.yearCell.selected {
+    background-color: #2a67f4;
+    color: white;
+}
+
+.yearsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.yearsCell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.yearsCell.selected {
+    background-color: #2a67f4;
+    color: white;
+}

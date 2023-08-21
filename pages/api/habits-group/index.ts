@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import { getServerSession } from "next-auth/next"
 
 const prisma = new PrismaClient()
+const secret = process.env.JWT_SECRET
 
 // Typescript types
-import { HabitsGroup, Habit } from '@/types/index'
+import { HabitsGroup, Session } from '@/types/index'
 
 // catch error type
 type ErrorType = {
@@ -12,36 +15,40 @@ type ErrorType = {
     message: string;
 }
 
+
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session: Session | null = await getServerSession(req, res, authOptions)
+    if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         switch (req.method) {
             case 'GET':
                 const userGroups = await prisma.habitsGroup.findMany({
-                    where:{
-                        userId:1
+                    where: {
+                        userId: session?.user?.id || '',
                     }
                 })
                 return res.status(200).json(userGroups)
             case 'POST':
                 // Validation of the request body
                 const { name, icon }: { name?: string, icon?: string } = req.body
-                
+
                 if (!name) {
-                    return res.status(400).json({message: 'Missing parameter' })
+                    return res.status(400).json({ message: 'Missing parameter' })
                 }
                 const createHabitsGroup: HabitsGroup = await prisma.habitsGroup.create({
                     data: {
-                        userId: 1,
+                        userId: session?.user?.id || '',
                         name,
                         icon
                     }
                 })
-                return res.status(201).json({ message: "Group Created", data: createHabitsGroup})
+                return res.status(201).json({ message: "Group Created", data: createHabitsGroup })
             default:
-                return res.status(405).json({message: 'Method not allowed' })
+                return res.status(405).json({ message: 'Method not allowed' })
         }
     } catch (error: any) {
-        res.status(500).json({message: error})
+        res.status(500).json({ message: error })
     }
 
 }

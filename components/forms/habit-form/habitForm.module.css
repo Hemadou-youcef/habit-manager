@@ -12,40 +12,46 @@
 }
 
 
-.habitForm{
+.habitForm {
     padding: 0px;
     margin: 0px;
 }
-.header{
+
+.header {
     padding: 20px;
     padding-bottom: 0px;
 }
-.header .title{
+
+.header .title {
     padding: 0;
     margin: 0;
     font-size: 18px;
     font-weight: 600;
 }
 
-.body{
+.body {
     padding: 20px;
 }
-.body .form{
+
+.body .form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-.body .form .formGroup{
+
+.body .form .formGroup {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-.body .form .formGroup .label{
+
+.body .form .formGroup .label {
     font-size: 12px;
     font-weight: 600;
     color: #727272;
 }
-.body .form .formGroup .input{
+
+.body .form .formGroup .input {
     border: 1px solid #e4e2e2;
     border-radius: 5px;
     padding: 5px 10px;
@@ -53,15 +59,18 @@
     font-weight: 600;
     color: #000;
 }
-.body .form .formGroup .input:focus{
+
+.body .form .formGroup .input:focus {
     outline: none;
 }
-.body .form .formGroup .input::placeholder{
+
+.body .form .formGroup .input::placeholder {
     color: #000;
     font-size: 12px;
     font-weight: 600;
 }
-.body .form .formGroup .input[type="checkbox"]{
+
+.body .form .formGroup .input[type="checkbox"] {
     width: 15px;
     height: 15px;
     border: 1px solid #e4e2e2;
@@ -71,6 +80,7 @@
     font-weight: 600;
     color: #000;
 }
+
 .body .form .formGroup .select {
     border: 1px solid #e4e2e2;
     border-radius: 5px;
@@ -79,46 +89,55 @@
     font-weight: 600;
     color: #000;
 }
-.body .form .formGroup .select:focus{
+
+.body .form .formGroup .select:focus {
     outline: none;
 }
-.body .form .formGroup .select::placeholder{
+
+.body .form .formGroup .select::placeholder {
     color: #000;
     font-size: 12px;
     font-weight: 600;
 }
-.body .form .formGroup .goal{
+
+.body .form .formGroup .goal {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .body .form .formGroup .goal .goalDetails {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsHeader{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsHeader {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsBody{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsBody {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .label{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .label {
     font-size: 12px;
     font-weight: 600;
     color: #000;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .input{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .input {
     border: 1px solid #e4e2e2;
     border-radius: 5px;
     padding: 5px 10px;
@@ -126,10 +145,12 @@
     font-weight: 600;
     color: #000;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .input:focus{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .input:focus {
     outline: none;
 }
-.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .select{
+
+.body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .select {
     border: 1px solid #e4e2e2;
     border-radius: 5px;
     padding: 5px 10px;
@@ -137,7 +158,8 @@
     font-weight: 600;
     color: #000;
 }
-.body .form .formGroup .options{
+
+.body .form .formGroup .options {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -146,7 +168,8 @@
     background-color: #f0f0f0;
     overflow: hidden;
 }
-.body .form .formGroup .options .option{
+
+.body .form .formGroup .options .option {
     padding: 10px;
     width: 10%;
     height: 50px;
@@ -157,12 +180,14 @@
     text-align: center;
     text-transform: capitalize;
 }
-.body .form .formGroup .options .option.active{
+
+.body .form .formGroup .options .option.active {
     /* border: 1px solid #487bf3; */
     background-color: #487bf3;
     color: #fff;
 }
-.body .form .formGroup .options .option.inactive{
+
+.body .form .formGroup .options .option.inactive {
     /* border: 1px solid #487bf3; */
     color: #000;
 }
@@ -170,12 +195,12 @@
 .footer{
     padding: 10px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 10px;
     background-color: #f0f0f0;
 }
 
-.footer .submit{
+.footer .submit {
     padding: 8px;
     border-radius: 3px;
     border: 0;
@@ -187,14 +212,17 @@
     cursor: pointer;
     width: 70px;
 }
-.footer .submit:active{
+
+.footer .submit:active {
     background-color: #2a67f4d9;
 }
-.footer .submit:disabled{
+
+.footer .submit:disabled {
     background-color: #82a4f3d9;
     cursor: not-allowed;
 }
-.footer .cancelBtn{
+
+.footer .cancelBtn {
     padding: 8px;
     border-radius: 3px;
     border: 0;
@@ -206,4 +234,37 @@
     gap: 3px;
     cursor: pointer;
     width: 70px;
+}
+
+.footer .mainAction {
+    display: flex;
+    gap: 5px;
+}
+
+.footer .deleteBtn {
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    border: 1px solid #dd4343;
+    background-color: #fff;
+    color: #dd4343;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
+}
+
+.footer .archiveBtn{
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    border: 1px solid #4d43dd;
+    background-color: #fff;
+    color: #4d43dd;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 3px;
+    cursor: pointer;
+    width: 100px;
 }
