@@ -31,10 +31,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         const { id }: { id?: string } = req.query;
+        if (!await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')) {
+            return res.status(401).json({ message: 'Unauthorized' })
+        }
         switch (req.method) {
             case 'GET':
                 const { withProgress = 'false' } = req.query;
-                const habit: Habit | null = await prisma.habits.findFirst({
+                const habit = await prisma.habits.findFirst({
                     where: {
                         id: parseInt(id as string),
                     },
@@ -53,9 +56,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(200).json(habit)
             case 'PUT':
                 const { habitGroupId, name, startDate, isArchived = false, accentColor, icon, goalsValue, goalsUnit, goalsPeriodicity, goalsPeriodicityValues }: HabitEdit = req.body
+                
                 if (!name && !startDate && !isArchived && !accentColor && !icon && !goalsValue && !goalsUnit && !goalsPeriodicity && !goalsPeriodicityValues) {
                     return res.status(400).json({ message: 'Missing parameter' });
                 }
+                
                 const habitEditedInfo: Habit = await prisma.habits.update({
                     where: {
                         id: parseInt(id as string)
@@ -76,6 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 return res.status(201).json({ message: "Habit Edited successfully", data: habitEditedInfo });
             case "DELETE":
+
                 await prisma.progress.deleteMany({
                     where: {
                         habitId: parseInt(id as string)
@@ -95,4 +101,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ message: error })
     }
 
+}
+
+
+const checkIfUserOwnsHabit = async (habitId: number, userId: string) => {
+    const habit = await prisma.habits.findFirst({
+        where: {
+            id: habitId,
+        }
+    })
+    if (habit?.userId !== userId) {
+        return false
+    }
+    return true
 }

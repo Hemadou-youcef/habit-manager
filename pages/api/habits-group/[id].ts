@@ -19,6 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         const { id }: { id?: string } = req.query;
+        if (!await checkIfUserOwnsHabitsGroup(parseInt(id as string), session?.user?.id || '')) {
+            return res.status(401).json({ message: 'Unauthorized' })
+        }
         switch (req.method) {
             case 'GET':
                 if (!id) {
@@ -79,4 +82,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ message: error })
     }
 
+}
+
+
+const checkIfUserOwnsHabitsGroup = async (habitsGroupId: number, userId: string) => {
+    const habitsGroup = await prisma.habitsGroup.findFirst({
+        where: {
+            id: habitsGroupId,
+            userId: userId
+        }
+    })
+    if (!habitsGroup) throw { statusCode: 401, message: "Unauthorized" }
+    return habitsGroup
 }

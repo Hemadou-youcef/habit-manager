@@ -24,7 +24,7 @@ const habitsGroup = () => {
     useEffect(() => {
         if(!router.isReady) return;
         handleRefreshHabitsList();
-    }, [router.isReady])
+    }, [router.isReady,id])
 
     const handleRefreshHabitsList = () => {
         setLoading(true);

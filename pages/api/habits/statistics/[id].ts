@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 import { startOfDay, endOfDay, formatDistance, subDays } from 'date-fns';
 
 // Typescript types
-import { Progress,Session } from '@/types';
+import { Progress, Session } from '@/types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session: Session | null = await getServerSession(req, res, authOptions)
@@ -19,7 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'GET':
                 // GET STATISTICS OF A HABIT
                 const { id, type = 'week', date } = req.query;
-                if (!id || !date) return res.status(400).json({ message: 'Missing parameter' });
+                if (!date) return res.status(400).json({ message: 'Missing parameter' });
+                if (!await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')) {
+                    return res.status(401).json({ message: 'Unauthorized' })
+                }
 
                 // SET STARTING DATE AND ENDING DATE
                 const choosenDate = new Date(date as string);
@@ -101,4 +104,16 @@ function getDatesInRange(startDate: Date, endDate: Date, type: string) {
     }
 
     return dates;
+}
+
+
+const checkIfUserOwnsHabit = async (habitId: number, userId: string) => {
+    const habit = await prisma.habits.findFirst({
+        where: {
+            id: habitId,
+            userId: userId
+        }
+    })
+    if (habit) return true
+    return false
 }
