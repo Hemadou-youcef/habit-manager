@@ -76,8 +76,8 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
     const handleNavigateDate = (isNextDate: boolean) => {
         if (!currentDate || !(currentDate instanceof Date)) return;
         const newDateValues = []
-        if (isNextDate) newDateValues.push(...[currentDate.getDate() + 1, currentDate.getDate() + 7, currentDate.getMonth() + 1, currentDate.getFullYear() + 1])
-        else newDateValues.push(...[currentDate.getDate() - 1, currentDate.getDate() - 7, currentDate.getMonth() - 1, currentDate.getFullYear() - 1])
+        if (isNextDate) newDateValues.push(...[currentDate.getDate() + 1, currentDate.getDate() + 8, currentDate.getMonth() + 1, currentDate.getFullYear() + 1])
+        else newDateValues.push(...[currentDate.getDate() - 1, currentDate.getDate() - 8, currentDate.getMonth() - 1, currentDate.getFullYear() - 1])
 
         let _currentDate = new Date();
         switch (currentStatisticsType) {

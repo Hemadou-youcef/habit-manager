@@ -1,0 +1,65 @@
+.signInButtonContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.signInButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    height: 55px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #000;
+    cursor: pointer;
+}
+
+.signInButton:hover {
+    background-color: #f0eded;
+}
+
+.signInButton:active {
+    background-color: #d9d9d9;
+}
+
+.googleSignInButton {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding: 0px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0px;
+    width: 100%;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 50%;
+    border: 5px solid #e0e0e0;
+    border-top-color: #3d3d3d;
+    animation: spinner 0.5s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

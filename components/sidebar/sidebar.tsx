@@ -28,8 +28,6 @@ import HabitsgroupsIcons from '../forms/icons-drop-down/habitsGroupIcons';
 // Typescript Types
 import { HabitsGroup } from '@prisma/client';
 
-// Auth
-import { useSession, signIn, signOut } from "next-auth/react"
 
 type UserInfo = {
     name: string,
@@ -40,14 +38,15 @@ type UserLoginInfo = {
     password: string,
 }
 const getUserHabitsGroups = async () => {
+
     const response = await fetch('/api/habits-group');
+    if (response.status != 200) return [];
     const data = await response.json();
     // setHabitsGroups(data)
     return data;
 }
 
-const SideBar = () => {
-    const { data: session,status } = useSession()
+const SideBar = ({ session, status, signOut }: { session: any, status: string, signOut: () => void }) => {
     // const { user, login, logOut }: { user: UserInfo, login: (user: UserLoginInfo) => void, logOut: () => void } = useAuth();
     const { habitsGroupList, refreshGroupListData }: { habitsGroupList: HabitsGroup[], refreshGroupListData: (hb: HabitsGroup) => void } = useDataContext()
     const { data: habitsGroups, error } = useSWR('/api/habits-group', getUserHabitsGroups);
@@ -62,11 +61,10 @@ const SideBar = () => {
     useEffect(() => {
         mutate('/api/habits-group').then((res) => {
             refreshGroupListData(res);
-            console.log(res)
         })
     }, [habitsGroups])
 
-    if(status === 'loading'){
+    if (status === 'loading') {
         return (
             <div className={styles.skeletonSideBar}>
                 <div className={styles.user}></div>
@@ -74,21 +72,9 @@ const SideBar = () => {
 
                 </div>
             </div>
-            )
-    }
-    if (status === "unauthenticated") {
-        return (
-            <div className={styles.main}>
-                <div className={styles.sections}>
-                    <div className={`${styles.sectionElement}`} onClick={() => signIn()}>
-                        <MdToday size={18} />
-                        <p>Login</p>
-                    </div>
-                </div>
-            </div>
         )
     }
-    return (
+    if (status === "authenticated") return (
         <>
             <div className={styles.main}>
                 <div className={styles.userCard}>

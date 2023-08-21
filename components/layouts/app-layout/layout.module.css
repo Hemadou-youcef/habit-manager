@@ -1,20 +1,82 @@
-.app{
+.app {
     display: grid;
     grid-template-areas: "sidebar main progress";
-    grid-template-columns: 240px minmax(600px,700px) auto;
+    grid-template-columns: 240px minmax(600px, 700px) auto;
     height: 100vh;
     padding: 0;
 }
-.sidebar{
+
+.notLoggedApp {
+    display: grid;
+    grid-template-areas: " main ";
+    height: 100vh;
+    padding: 0;
+}
+
+.sidebar {
     grid-area: sidebar;
-    background-color: #f5f5f5;  
+    background-color: #f5f5f5;
     border-right: 1px solid #e0e0e0;
 }
-.main{
+
+.main {
     grid-area: main;
 }
-.progress{
+
+.progress {
     grid-area: progress;
     background-color: #f5f5f5;
     border-left: 1px solid #e0e0e0;
+}
+.notLogged{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.notLoggedContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 30px;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    width: 400px;
+}
+.notLoggedTitle{
+    font-size: 30px;
+    font-weight: 600;
+    color: #000;
+}
+.notLoggedDescription{
+    font-size: 15px;
+    font-weight: 600;
+    color: #000;
+}
+
+
+.pageLoading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.spinner{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 5px solid #e0e0e0;
+    border-top: 5px solid #000;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg)
+    }
 }
