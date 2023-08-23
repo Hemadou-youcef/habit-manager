@@ -19,9 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         const { id }: { id?: string } = req.query;
-        if (!await checkIfUserOwnsHabitsGroup(parseInt(id as string), session?.user?.id || '')) {
-            return res.status(401).json({ message: 'Unauthorized' })
-        }
+        await checkIfUserOwnsHabitsGroup(parseInt(id as string), session?.user?.id || '')
+
         switch (req.method) {
             case 'GET':
                 if (!id) {
@@ -74,12 +73,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         id: parseInt(id as string)
                     },
                 })
-                res.status(205).json({ message: "Habits Group Deleted successfully", data: deletedHabitsGroup });
+                return res.status(202).json({ message: "Habits Group Deleted successfully", data: deletedHabitsGroup });
             default:
                 return res.status(405).json({ message: 'Method not allowed' })
         }
     } catch (error: any) {
-        res.status(500).json({ message: error })
+        if (error.statusCode) return res.status(error.statusCode).json({ message: error.message })
+        return res.status(500).json({ statusCode: 500, message: error })
     }
 
 }
@@ -89,9 +89,9 @@ const checkIfUserOwnsHabitsGroup = async (habitsGroupId: number, userId: string)
     const habitsGroup = await prisma.habitsGroup.findFirst({
         where: {
             id: habitsGroupId,
-            userId: userId
         }
     })
-    if (!habitsGroup) throw { statusCode: 401, message: "Unauthorized" }
-    return habitsGroup
+    if (!habitsGroup) throw { statusCode: 404, message: "Habits Group not found" }
+    if (userId !== habitsGroup.userId) throw { statusCode: 401, message: "Unauthorized" }
+    return true;
 }

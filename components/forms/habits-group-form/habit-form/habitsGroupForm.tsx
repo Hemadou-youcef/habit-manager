@@ -29,7 +29,7 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
 
     const [groupInfo, setGroupInfo] = useState({
         name: data?.name || '',
-        icon: data?.icon || 'FaFolder'
+        icon: data?.icon || 'Folder'
     });
     const [loading, setLoading] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false);
@@ -70,14 +70,15 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
     }
 
     const handleDelete = () => {
-        setLoading(true);
         axios.delete(`/api/habits-group/${data?.id}`)
             .then((res) => {
+                const data = res.data.data
+                const newHabitsGroup: HabitsGroup[] = habitsGroupList.filter((value: HabitsGroup) => value.id != data.id)
+                refreshGroupListData(newHabitsGroup);
                 editHabitsGroup(null);
                 closeForm();
             })
-            .catch((err) => console.log(err))
-            .finally(() => setLoading(false));
+            .catch((err) => console.log(err));
     }
 
     return (

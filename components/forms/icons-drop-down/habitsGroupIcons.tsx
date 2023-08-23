@@ -3,14 +3,19 @@ import { useEffect, useState, useRef } from 'react';
 
 // styles
 import styles from './habitsGroupIcons.module.css';
+import stylesDarkTheme from './habitsGroupIconsDarkTheme.module.css';
+
+// Components
+import { useDataContext } from '@/components/layouts/app-layout/layout';
 
 // Icons list
 import { groupIcons, habitIcons } from '@/components/icons';
 
-// Icons
-import { BsXOctagonFill } from 'react-icons/bs';
 
 const HabitsgroupsIcons = ({ currentIcon, showOnlyMode = false, onIconChange, type }: { currentIcon: string, showOnlyMode: boolean, onIconChange: (value: string) => void, type: string }) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+
     const [options, setOptions] = useState(false);
     const optionsRef = useRef<HTMLDivElement>(null);
 
@@ -29,29 +34,36 @@ const HabitsgroupsIcons = ({ currentIcon, showOnlyMode = false, onIconChange, ty
             setOptions(false);
         }
     };
+
+    const getIconList = (): { name: string, icon: JSX.Element }[] => {
+        return type === 'habit' ? habitIcons : groupIcons;
+    };
+
+    const findIconByName = (name: string): { name: string, icon: JSX.Element } | undefined => {
+        return getIconList().find(icon => icon.name === name);
+    };
+
     const showCurrentIcon = (): JSX.Element => {
-        const iconList = type == 'habit' ? habitIcons : groupIcons;
-        const choosenIcon: JSX.Element[] = iconList.filter((value) => value.type.name == currentIcon)
-        if (choosenIcon.length > 0) return choosenIcon[0];
-        else return <BsXOctagonFill size={type == 'habit' ? 16 : 20} />;
-    }
+        const iconList = type === 'habit' ? habitIcons : groupIcons;
+        const chosenIcon = iconList.find(icon => icon.name === currentIcon);
+        return chosenIcon ? chosenIcon.icon : iconList[0].icon;
+    };
+
     if (showOnlyMode) return showCurrentIcon();
     return (
         <>
-            <div className={styles.habitActionButton} ref={optionsRef}>
-                <div className={styles.habitActionButtonIcon} onClick={() => setOptions(!options)}>
-                    {/* <BiDotsVertical /> */}
-                    {/* {groupIcons[currentIcon]} */}
+            <div className={stylesTheme.habitActionButton} ref={optionsRef}>
+                <div className={stylesTheme.habitActionButtonIcon} onClick={() => setOptions(!options)}>
                     {showCurrentIcon()}
                 </div>
                 <div
-                    className={styles.habitActionDropDown}
+                    className={stylesTheme.habitActionDropDown}
                     style={{ display: options ? 'grid' : 'none' }}
 
                 >
-                    {(type == 'habit' ? habitIcons : groupIcons).map((_icon, index) => (
-                        <div key={index} className={styles.habitIconItem} onClick={() => { onIconChange(_icon.type.name), setOptions(false) }}>
-                            {_icon}
+                    {getIconList().map((_icon, index) => (
+                        <div key={index} className={stylesTheme.habitIconItem} onClick={() => { onIconChange(_icon.name), setOptions(false) }}>
+                            {_icon.icon}
                         </div>
                     ))}
                 </div>

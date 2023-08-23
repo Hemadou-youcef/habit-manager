@@ -19,17 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         const { id }: { id?: string } = req.query;
-        if (!await checkIfUserOwnsProgress(parseInt(id as string), session?.user?.id || '')) {
-            return res.status(401).json({ message: 'Unauthorized' })
-        }
+        await checkIfUserOwnsProgress(parseInt(id as string), session?.user?.id || '')
 
         switch (req.method) {
             case 'PUT':
                 // Validation of the request body
                 const { value } = req.body;
-                // if (!value) {
-                //     return res.status(400).json({ message: 'Missing parameter' })
-                // }
+                
                 // EDIT PROGRESS
                 const updateProgress = await prisma.progress.update({
                     where: {
@@ -44,7 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(405).json({ message: 'Method not allowed' })
         }
     } catch (error: any) {
-        res.status(500).json({ message: error })
+        if (error.statusCode) return res.status(error.statusCode).json({ message: error.message })
+        return res.status(500).json({ statusCode: 500, message: error })
     }
 
 }
@@ -52,11 +49,16 @@ const checkIfUserOwnsProgress = async (progressId: number, userId: string) => {
     const progress = await prisma.progress.findFirst({
         where: {
             id: progressId,
+        },
+        include: {
             habit: {
-                userId: userId
+                select: {
+                    userId: true
+                }
             }
         }
     })
-    if (progress) return true
-    return false
+    if (!progress) throw { statusCode: 404, message: "Progress not found" }
+    if (userId != progress?.habit?.userId) throw { statusCode: 401, message: "Unauthorized" }
+    return true
 }

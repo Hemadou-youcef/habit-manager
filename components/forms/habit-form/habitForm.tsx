@@ -43,7 +43,7 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
         isArchived: data?.isArchived || false,
         startDate: data?.startDate ? new Date(data?.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
         accentColor: data?.accentColor || "#2a67f4",
-        icon: data?.icon || 'BsFillBookFill',
+        icon: data?.icon || 'Book',
         goalsValue: data?.goalsValue.toString() || '-1',
         goalsPeriodicity: data?.goalsPeriodicity || 'daily',
         goalsUnit: data?.goalsUnit || 'times',
@@ -101,14 +101,12 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
     }
 
     const handleDelete = () => {
-        setLoading(true);
         axios.delete(`/api/habits/${data?.id}`)
             .then((res) => {
                 refresh();
                 closeForm();
             })
-            .catch((err) => console.log(err))
-            .finally(() => setLoading(false));
+            .catch((err) => console.log(err));
     }
 
     const handleGoalsPeriodicity = (goalsPeriodicity: string) => {

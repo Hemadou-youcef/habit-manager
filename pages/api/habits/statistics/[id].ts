@@ -20,9 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 // GET STATISTICS OF A HABIT
                 const { id, type = 'week', date } = req.query;
                 if (!date) return res.status(400).json({ message: 'Missing parameter' });
-                if (!await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')) {
-                    return res.status(401).json({ message: 'Unauthorized' })
-                }
+                await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')
 
                 // SET STARTING DATE AND ENDING DATE
                 const choosenDate = new Date(date as string);
@@ -111,9 +109,9 @@ const checkIfUserOwnsHabit = async (habitId: number, userId: string) => {
     const habit = await prisma.habits.findFirst({
         where: {
             id: habitId,
-            userId: userId
         }
     })
-    if (habit) return true
-    return false
+    if (!habit) throw { statusCode: 404, message: "Habit not found" }
+    if (userId !== habit.userId) throw { statusCode: 401, message: "Unauthorized" }
+    return true;
 }

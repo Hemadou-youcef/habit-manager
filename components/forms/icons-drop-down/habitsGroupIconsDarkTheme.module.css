@@ -1,0 +1,54 @@
+/* Dark Theme */
+.habitActionButton {
+    position: relative;
+}
+
+.habitActionButtonIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #3d3d3d;
+    background-color: #292929;
+    color: #e0e0e0;
+    font-size: 15px;
+    cursor: pointer;
+}
+.habitActionButtonIcon:active {
+    background-color: #1f1f1f;
+}
+.habitActionDropDown {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 5px;
+    margin-top: 10px;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.2);
+    z-index: 1;
+}
+.habitActionDropDownItem {
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: #e0e0e0;
+    font-size: 12px;
+    cursor: pointer;
+}
+.habitActionDropDownItem:hover {
+    background-color: #3d3d3d;
+}
+
+.habitIconItem {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.habitIconItem svg {
+    color: #e0e0e0;
+    cursor: pointer;
+}

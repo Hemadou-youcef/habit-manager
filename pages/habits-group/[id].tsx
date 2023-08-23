@@ -10,6 +10,7 @@ import HabitsList from "@/components/habits-list/template/habit-list/habitsList"
 
 // Typescript Types
 import { Habit, HabitWithProgress, HabitsGroup } from "@/types";
+import Spinner from "@/components/features/spinner/spinner";
 
 
 
@@ -22,9 +23,9 @@ const habitsGroup = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if(!router.isReady) return;
+        if (!router.isReady) return;
         handleRefreshHabitsList();
-    }, [router.isReady,id])
+    }, [router.isReady, id])
 
     const handleRefreshHabitsList = () => {
         setLoading(true);
@@ -43,7 +44,18 @@ const habitsGroup = () => {
                 setLoading(false);
             })
     }
-    if (!habitsGroup) return <></>;
+    if (!habitsGroup) return (
+        <>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px'
+            }}>
+                <Spinner width="40px" height="40px" />
+            </div>
+        </>
+    );
     return (
         <>
             <HabitsList

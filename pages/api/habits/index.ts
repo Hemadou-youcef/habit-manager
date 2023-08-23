@@ -44,7 +44,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 if (!withArchived) Object.assign(WhereClause, { isArchived: archived });
-                console.log(WhereClause)
                 // GET USER HABITS THAT ARE NOT ARCHIVED
                 const habitList: Habit[] = await prisma.habits.findMany({
                     where: WhereClause,
@@ -149,7 +148,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(405).json({ message: 'Method not allowed' });
         }
     } catch (error: any) {
-        res.status(500).json({ statusCode: 500, message: error });
+        if (error.statusCode) return res.status(error.statusCode).json({ message: error.message })
+        return res.status(500).json({ statusCode: 500, message: error })
     }
 
 }

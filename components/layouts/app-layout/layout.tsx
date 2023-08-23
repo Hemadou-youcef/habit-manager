@@ -61,7 +61,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
 
-    if (status === 'loading' || (status === 'authenticated' && !session)) return (
+    if (status === 'loading' || (status === 'authenticated' && !session) || (status === 'unauthenticated' && window.location.pathname != '/auth/signIn')) return (
         <>
             <div className={stylesTheme.pageLoading}>
                 <div className={stylesTheme.spinner}>

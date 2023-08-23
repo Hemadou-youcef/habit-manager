@@ -26,6 +26,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 // Icons
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { AiOutlineReload } from 'react-icons/ai';
 
 
 // Typescript Types
@@ -136,6 +137,11 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
                             </button>
                         </div>
                         <div className={stylesTheme.item}>
+                            <button
+                                onClick={() => handleChangeDate(currentDate as Date)}
+                            >
+                                <AiOutlineReload size={18} />
+                            </button>
                             <button
                                 onClick={() => setShowCalendar(!showCalendar)}
                             >

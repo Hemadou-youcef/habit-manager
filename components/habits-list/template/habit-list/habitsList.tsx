@@ -1,4 +1,7 @@
-// React Components
+// Next
+import { useRouter } from 'next/router';
+
+// React 
 import { useEffect, useState } from 'react';
 
 // Styles
@@ -56,7 +59,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
     const [habitEditData, setHabitEditData] = useState<Habit | null>(null);
     const [habitEditMode, setHabitEditMode] = useState<boolean>(false);
 
-    // const redirect = usedi
+    const router = useRouter();
 
     useEffect(() => {
         setHabitList(habits);
@@ -75,7 +78,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
 
     const handleEditHabitsGroup = (habitsGroup: HabitsGroup | null): void => {
         if (habitsGroup) setHabitsGroupInfo(habitsGroup)
-        // else redirect()
+        else router.push("/");
     }
 
     const handleEditHabit = (habit: Habit): void => {
@@ -157,21 +160,30 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
                             {!readOnly &&
                                 <div className={stylesTheme.habitsSections}>
                                     <button
-                                        style={{ color: '#2a67f4', borderColor: '#2a67f4', }}
+                                        style={{
+                                            color: theme === 'light' ? '#2a67f4' : '#9ebbff',
+                                            borderColor: theme === 'light' ? '#2a67f4' : '#9ebbff'
+                                        }}
                                         className={currentHabitSection.length > 1 ? stylesTheme.active : undefined}
                                         onClick={() => setCurrentHabitSection([habitSectionConfiguration[0], habitSectionConfiguration[1]])}
                                     >
                                         Pending Habits
                                     </button>
                                     <button
-                                        style={{ color: '#1ec448', borderColor: '#1ec448' }}
+                                        style={{
+                                            color: theme === 'light' ? '#1ec448' : '#43df6a',
+                                            borderColor: theme === 'light' ? '#1ec448' : '#43df6a'
+                                        }}
                                         className={currentHabitSection[0][0] == 2 ? stylesTheme.active : undefined}
                                         onClick={() => setCurrentHabitSection([habitSectionConfiguration[2]])}
                                     >
                                         {`Done Habits (${habitList[2].length})`}
                                     </button>
                                     <button
-                                        style={{ color: '#ff2828', borderColor: '#ff2828' }}
+                                        style={{
+                                            color: theme === 'light' ? '#ff2828' : '#f76868',
+                                            borderColor: theme === 'light' ? '#ff2828' : '#f76868'
+                                        }}
                                         className={currentHabitSection[0][0] == 3 ? stylesTheme.active : undefined}
                                         onClick={() => setCurrentHabitSection([habitSectionConfiguration[3]])}
                                     >
