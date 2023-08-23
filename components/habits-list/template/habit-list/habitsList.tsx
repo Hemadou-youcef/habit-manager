@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 
 // Styles
 import styles from './habitsList.module.css';
+import stylesDarkTheme from './habitsListDarkTheme.module.css';
 
 // Icons 
 import { AiFillEdit, AiOutlinePlus } from 'react-icons/ai';
 import { FiCalendar } from 'react-icons/fi';
 
 // Components
+import { useDataContext } from '@/components/layouts/app-layout/layout';
 import HabitsItem from '../../list-item/habits-item/habitsItem';
 import HabitForm from '@/components/forms/habit-form/habitForm';
 import HabitsGroupForm from '@/components/forms/habits-group-form/habit-form/habitsGroupForm';
@@ -39,6 +41,9 @@ const habitSectionConfiguration = [
 ]// [Section Index, Title, Background Color, Is Open or No]
 
 const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDate, refresh }: habitList) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+
     const [habitsGroupInfo, setHabitsGroupInfo] = useState<HabitsGroup | undefined>(habitsGroup)
     const [habitList, setHabitList] = useState<Habit[][] | HabitWithProgress[][]>(habits);
     const [currentHabitSection, setCurrentHabitSection] = useState([habitSectionConfiguration[0], habitSectionConfiguration[1]]);
@@ -122,60 +127,60 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
 
     return (
         <>
-            <div className={styles.content}>
-                <div className={styles.header}>
-                    <p className={styles.title}>{habitsGroupInfo?.name || title}</p>
-                    <div className={styles.actions}>
+            <div className={stylesTheme.content}>
+                <div className={stylesTheme.header}>
+                    <p className={stylesTheme.title}>{habitsGroupInfo?.name || title}</p>
+                    <div className={stylesTheme.actions}>
                         {habitsGroupInfo?.id ? (
-                            <button className={styles.editHabitButton} onClick={() => setShowHabitsGroupForm(true)}>
+                            <button className={stylesTheme.editHabitButton} onClick={() => setShowHabitsGroupForm(true)}>
                                 <AiFillEdit size={15} />
                                 {/* Edit Group */}
                             </button>
                         ) : (
                             <button
-                                className={styles.editDateButton}
+                                className={stylesTheme.editDateButton}
                                 onClick={() => setShowCalendar(!showCalendar)}
                             >
                                 <FiCalendar size={15} />
                                 {formatDate(currentDate as Date)}
                             </button>
                         )}
-                        <button className={styles.addButton} onClick={() => setShowHabitForm(true)}>
+                        <button className={stylesTheme.addButton} onClick={() => setShowHabitForm(true)}>
                             <AiOutlinePlus size={15} />
                             {/* Add Habits */}
                         </button>
                     </div>
                 </div>
-                <div className={styles.body}>
-                    {loading ? <p className={styles.loading}>Loading...</p> :
+                <div className={stylesTheme.body}>
+                    {loading ? <p className={stylesTheme.loading}>Loading...</p> :
                         <>
                             {!readOnly &&
-                                <div className={styles.habitsSections}>
+                                <div className={stylesTheme.habitsSections}>
                                     <button
                                         style={{ color: '#2a67f4', borderColor: '#2a67f4', }}
-                                        className={currentHabitSection.length > 1 ? styles.active : undefined}
+                                        className={currentHabitSection.length > 1 ? stylesTheme.active : undefined}
                                         onClick={() => setCurrentHabitSection([habitSectionConfiguration[0], habitSectionConfiguration[1]])}
                                     >
                                         Pending Habits
                                     </button>
                                     <button
                                         style={{ color: '#1ec448', borderColor: '#1ec448' }}
-                                        className={currentHabitSection[0][0] == 2 ? styles.active : undefined}
+                                        className={currentHabitSection[0][0] == 2 ? stylesTheme.active : undefined}
                                         onClick={() => setCurrentHabitSection([habitSectionConfiguration[2]])}
                                     >
                                         {`Done Habits (${habitList[2].length})`}
                                     </button>
                                     <button
                                         style={{ color: '#ff2828', borderColor: '#ff2828' }}
-                                        className={currentHabitSection[0][0] == 3 ? styles.active : undefined}
+                                        className={currentHabitSection[0][0] == 3 ? stylesTheme.active : undefined}
                                         onClick={() => setCurrentHabitSection([habitSectionConfiguration[3]])}
                                     >
                                         {`Fail Habits (${habitList[3].length})`}
                                     </button>
                                 </div>
                             }
-                            <div className={styles.habits}>
-                                {habitList[0].length === 0 && habitList[1].length === 0 && <p className={styles.noHabits}>No Habits Found</p>}
+                            <div className={stylesTheme.habits}>
+                                {habitList[0].length === 0 && habitList[1].length === 0 && <p className={stylesTheme.noHabits}>No Habits Found</p>}
                                 {currentHabitSection.map((value, index) => (
 
                                     <HabitsItem

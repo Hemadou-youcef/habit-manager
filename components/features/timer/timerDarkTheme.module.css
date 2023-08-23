@@ -1,0 +1,68 @@
+/* Dark Theme */
+.bg_red {
+    background-color: #8c0b22;
+    color: white;
+}
+
+.bg_red:active {
+    background-color: #aa2235;
+}
+
+.bg_red:disabled {
+    background-color: #b8637b;
+}
+
+.bg_blue {
+    background-color: #1f4e9e;
+    color: white;
+}
+
+.bg_blue:active {
+    background-color: #3b6bad;
+}
+
+.bg_blue:disabled {
+    background-color: #6b8ec6;
+}
+
+.header {
+    border-bottom: 1px solid #333333;
+}
+
+.timer div {
+    border: 2px solid #666666;
+    color: #999999;
+}
+
+.actions button {
+    background-color: #444444;
+    color: white;
+    border-radius: 5px;
+}
+
+.actions button:active {
+    background-color: #555555;
+}
+
+.footer {
+    background-color: #333333;
+}
+
+.footer .submit {
+    background-color: #1f4e9e;
+    color: white;
+}
+
+.footer .submit:active {
+    background-color: #3b6bad;
+}
+
+.footer .submit:disabled {
+    background-color: #6b8ec6;
+}
+
+.footer .cancelBtn {
+    border: 1px solid #555555;
+    background-color: #333333;
+    color: #999999;
+}

@@ -1,0 +1,140 @@
+/* Dark Theme */
+
+.bg_green {
+    background-color: #0b8e0c !important;
+    color: white;
+}
+
+.bg_green:active {
+    background-color: #1cb21e !important;
+}
+
+.bg_green:disabled {
+    background-color: #4f9f50 !important;
+}
+
+.habitForm {
+    padding: 0px;
+    margin: 0px;
+}
+
+.header {
+    padding: 20px;
+    padding-bottom: 0px;
+}
+
+.header .title {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.body {
+    padding: 20px;
+}
+
+.body .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.body .form .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.body .form .formGroup .label {
+    color: #999999;
+}
+
+.body .form .formGroup .input,
+.body .form .formGroup .input[type="checkbox"],
+.body .form .formGroup .select {
+    border: 1px solid #444444;
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+.body .form .formGroup .input:focus,
+.body .form .formGroup .select:focus {
+    outline: none;
+}
+
+.body .form .formGroup .input::placeholder,
+.body .form .formGroup .select::placeholder {
+    color: #999999;
+}
+
+.body .form .formGroup .goalDetails .goalDetailsBodyGroup .label {
+    color: #999999;
+}
+
+.footer {
+    background-color: #333333;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+    gap: 10px;
+}
+
+.footer .submit {
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    background-color: #4d90fe;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
+}
+
+.footer .submit:active {
+    background-color: #4d90fed9;
+}
+
+.footer .submit:disabled {
+    background-color: #82a4f3d9;
+    cursor: not-allowed;
+}
+
+.footer .cancelBtn {
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    border: 1px solid #4d4d4d;
+    background-color: #1f1f1f;
+    color: #a0a0a0;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
+}
+
+.footer .mainAction {
+    display: flex;
+    gap: 5px;
+}
+
+
+.footer .deleteBtn {
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    border: 1px solid #dd4343;
+    background-color: #1f1f1f;
+    color: #dd4343;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
+}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 // Styles
 import styles from './habitsGroupForm.module.css';
+import stylesDarkTheme from './habitsGroupFormDarkTheme.module.css';
 
 // Components
 import axios from 'axios';
@@ -23,7 +24,9 @@ type HabitGroupForm = {
     closeForm: () => void;
 }
 const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGroupForm) => {
-    const { habitsGroupList, refreshGroupListData } = useDataContext();
+    const { habitsGroupList, refreshGroupListData, theme }: { habitsGroupList: HabitsGroup[], refreshGroupListData: (hb: HabitsGroup[]) => void, theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+
     const [groupInfo, setGroupInfo] = useState({
         name: data?.name || '',
         icon: data?.icon || 'FaFolder'
@@ -79,15 +82,15 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
 
     return (
         <Overlay width="500px" closeOverlay={() => closeForm()} closeOnBackgroundClick={true}>
-            <div className={styles.habitForm}>
-                <div className={styles.header}>
-                    <p className={styles.title}>New Habits Group</p>
+            <div className={stylesTheme.habitForm}>
+                <div className={stylesTheme.header}>
+                    <p className={stylesTheme.title}>New Habits Group</p>
                 </div>
-                <div className={styles.body}>
-                    <form className={styles.form}>
-                        <div className={styles.formGroup} style={{ flexDirection: 'row' }}>
+                <div className={stylesTheme.body}>
+                    <form className={stylesTheme.form}>
+                        <div className={stylesTheme.formGroup} style={{ flexDirection: 'row' }}>
                             <input
-                                className={styles.input}
+                                className={stylesTheme.input}
                                 type="text"
                                 placeholder="Group Name"
                                 style={{ width: '100%' }}
@@ -95,7 +98,7 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
                                 onChange={(e) => setGroupInfo({ ...groupInfo, name: e.target.value })}
                             />
                             {/* <input
-                                className={styles.input}
+                                className={stylesTheme.input}
                                 type="text"
                                 value={groupInfo.icon}
                                 onChange={(e) => setGroupInfo({ ...groupInfo, icon: e.target.value })}
@@ -108,22 +111,22 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
                         </div>
                     </form>
                 </div>
-                <div className={styles.footer}>
+                <div className={stylesTheme.footer}>
                     <div>
                         {editMode &&
-                            <button className={styles.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
+                            <button className={stylesTheme.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
                                 Delete
                             </button>
                         }
                     </div>
-                    <div className={styles.mainAction}>
-                        <button className={styles.cancelBtn} onClick={() => closeForm()}>
+                    <div className={stylesTheme.mainAction}>
+                        <button className={stylesTheme.cancelBtn} onClick={() => closeForm()}>
                             Cancel
                         </button>
                         <input
                             type="submit"
                             value={loading ? 'Loading...' : editMode ? 'Edit' : 'Save'}
-                            className={`${styles.submit} ${editMode ? styles.bg_green : ""}`}
+                            className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
                             onClick={() => handleSubmit()}
                             disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
                         />

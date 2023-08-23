@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 
 // Styles
 import styles from "./timer.module.css";
+import stylesDarkTheme from "./timerDarkTheme.module.css";
 
 // Components
+import { useDataContext } from "@/components/layouts/app-layout/layout";
 import Overlay from "@/components/features/overlay/overlay";
 
 // Typescript Types
@@ -13,6 +15,9 @@ import { Progress } from "@/types";
 
 
 const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, saveProgressTime: (minutes:number) => void, closeTimer: () => void }) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = theme === "light" ? styles : stylesDarkTheme;
+
     const [startTime, setStartTime] = useState<number>(0);
     const [currentTime, setCurrentTime] = useState<string>('00:00:00');
     const [oldTime, setOldTime] = useState<number>(0);
@@ -94,24 +99,24 @@ const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, savePro
     }
     return (
         <Overlay width="350px" closeOverlay={() => closeTimer()} closeOnBackgroundClick={false}>
-            <div className={styles.content}>
-                <div className={styles.header}>
+            <div className={stylesTheme.content}>
+                <div className={stylesTheme.header}>
                     Habit #{data.habitId}
                 </div>
-                <div className={styles.body}>
-                    <div className={styles.timer}>
+                <div className={stylesTheme.body}>
+                    <div className={stylesTheme.timer}>
                         {currentTime.split(':').map((value, index) => (
                             <div key={index}>
                                 {value}
                             </div>
                         ))}
                     </div>
-                    <div className={styles.actions}>
+                    <div className={stylesTheme.actions}>
                         <div>
-                            <button className={styles.bg_red} onClick={() => stopTimer()} disabled={!isTimerRunning}>
+                            <button className={stylesTheme.bg_red} onClick={() => stopTimer()} disabled={!isTimerRunning}>
                                 stop
                             </button>
-                            <button className={styles.bg_blue} onClick={() => startTimer()} disabled={isTimerRunning}>
+                            <button className={stylesTheme.bg_blue} onClick={() => startTimer()} disabled={isTimerRunning}>
                                 start
                             </button>
                         </div>
@@ -120,14 +125,14 @@ const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, savePro
                         </button>
                     </div>
                 </div>
-                <div className={styles.footer}>
-                    <button className={styles.cancelBtn} onClick={() => { clearInterval(intervall); closeTimer() }}>
+                <div className={stylesTheme.footer}>
+                    <button className={stylesTheme.cancelBtn} onClick={() => { clearInterval(intervall); closeTimer() }}>
                         Cancel
                     </button>
                     <input
                         type="submit"
                         value={loading ? 'Loading...' : 'Save'}
-                        className={styles.submit}
+                        className={stylesTheme.submit}
                         onClick={() => saveTime()}
                     />
                 </div>

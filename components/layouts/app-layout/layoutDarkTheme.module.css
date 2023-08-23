@@ -1,0 +1,93 @@
+/* Dark Theme */
+
+
+.app {
+    display: grid;
+    grid-template-areas: "sidebar main progress";
+    grid-template-columns: 240px minmax(600px, 700px) auto;
+    height: 100vh;
+    padding: 0;
+    background-color: #292929;
+}
+
+.notLoggedApp {
+    display: grid;
+    grid-template-areas: " main ";
+    height: 100vh;
+    padding: 0;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: #1a1a1a;
+    border-right: 1px solid #0d0d0d;
+}
+
+.main {
+    grid-area: main;
+    background-color: #121212;
+}
+
+.progress {
+    grid-area: progress;
+    background-color: #1a1a1a;
+    border-left: 1px solid #0d0d0d;
+}
+
+.notLogged {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #292929;
+}
+
+.notLoggedContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 30px;
+    background-color: #1a1a1a;
+    border: 1px solid #0d0d0d;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.notLoggedTitle {
+    font-size: 30px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.notLoggedDescription {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.pageLoading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #292929;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 5px solid #0d0d0d;
+    border-top: 5px solid #fff;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

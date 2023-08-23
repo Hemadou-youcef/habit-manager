@@ -1,16 +1,22 @@
+/* Dark Theme */
+
+/* Main Section */
 .main {
     padding: 13px;
     padding-top: 30px;
     display: grid;
     gap: 10px;
+    background-color: #1a1a1a;
+    color: #fff;
 }
 
+/* User Card */
 .userCard {
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid #f3f3f3;
-    background-color: #ececec;
-    color: #050c1f;
+    border: 1px solid #0d0d0d;
+    background-color: #292929;
+    color: #fff;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -27,6 +33,7 @@
     font-weight: 500;
 }
 
+/* Sections */
 .sections {
     margin-bottom: 10px;
 }
@@ -44,11 +51,11 @@
 
 .sections a {
     text-decoration: none;
-    color: #7a7a7a
+    color: #7a7a7a;
 }
 
 .sections:hover a {
-    color: #1a1a1a;
+    color: #fff;
 }
 
 .sections .active {
@@ -57,11 +64,12 @@
     transition: all 0.3s ease-in-out;
 }
 
+/* Section Element */
 .sectionElement {
     padding: 7px 10px;
     margin-bottom: 5px;
     border-radius: 5px;
-    color: #7a7a7a;
+    color: #acacac;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -74,9 +82,8 @@
 }
 
 .sectionElement:hover:not(.active) {
-    /* background-color: #2a67f4; */
-    background-color: #eeeeee;
-    color: #1a1a1a;
+    background-color: #1e1e1e;
+    color: #fff;
 }
 
 .sectionElement p {
@@ -91,17 +98,20 @@
     gap: 10px;
 }
 
+/* Skeleton Sidebar */
 .skeletonSideBar {
     display: flex;
     flex-direction: column;
     padding: 10px;
     margin: 0px;
+    background-color: #1a1a1a;
+    color: #fff;
 }
 
 .skeletonSideBar .user {
     width: 100%;
     height: 40px;
     margin-top: 20px;
-    border: 1px solid #f3f3f3;
-    background-color: #ececec;
+    border: 1px solid #0d0d0d;
+    background-color: #292929;
 }

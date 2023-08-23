@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 // styles
 import styles from './progress.module.css'
+import stylesDarkTheme from './progressDarkTheme.module.css'
 
 // Components 
 import axios from 'axios';
@@ -35,7 +36,8 @@ type mainInfo = {
 
 
 const ProgressBar = () => {
-    const { selectedHabit, selectHabit }: { selectedHabit: Habit, selectHabit: (habit: null) => void } = useDataContext();
+    const { selectedHabit, selectHabit, theme }: { selectedHabit: Habit, selectHabit: (habit: null) => void, theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
     const [tabIndex, setTabIndex] = useState(0);
 
     const [mainInfo, setMainInfo] = useState<mainInfo>({ completedProgress: 0, failedProgress: 0 });
@@ -105,16 +107,16 @@ const ProgressBar = () => {
     if (!selectedHabit) return <div></div>;
     return (
         <>
-            <div className={styles.content}>
-                <div className={styles.habitCard}>
-                    <div className={styles.habitCardItem}>
+            <div className={stylesTheme.content}>
+                <div className={stylesTheme.habitCard}>
+                    <div className={stylesTheme.habitCardItem}>
                         <button
-                            className={styles.returnButton}
+                            className={stylesTheme.returnButton}
                             onClick={() => { selectHabit(null) }}
                         >
                             <BiChevronLeft size={22} />
                         </button>
-                        <div className={styles.habitIcon} style={{ backgroundColor: selectedHabit?.accentColor }}>
+                        <div className={stylesTheme.habitIcon} style={{ backgroundColor: selectedHabit?.accentColor }}>
                             <HabitsgroupsIcons
                                 currentIcon={selectedHabit?.icon}
                                 showOnlyMode={true}
@@ -122,22 +124,22 @@ const ProgressBar = () => {
                                 onIconChange={(value: string) => { }}
                             />
                         </div>
-                        <div className={styles.habitName}>
+                        <div className={stylesTheme.habitName}>
                             {selectedHabit?.name}
                         </div>
                     </div>
 
                 </div>
-                <div className={styles.habitsSections}>
+                <div className={stylesTheme.habitsSections}>
                     <button
-                        className={tabIndex == 0 ? styles.active : undefined}
+                        className={tabIndex == 0 ? stylesTheme.active : undefined}
                         onClick={() => handleTabChange(0)}
                     >
                         <FiInfo size={20} />
                         Information
                     </button>
                     <button
-                        className={tabIndex == 1 ? styles.active : undefined}
+                        className={tabIndex == 1 ? stylesTheme.active : undefined}
                         onClick={() => handleTabChange(1)}
                     >
 
@@ -145,25 +147,25 @@ const ProgressBar = () => {
                         Statistics
                     </button>
                 </div>
-                {loading && <div className={styles.loading}>Loading</div>}
+                {loading && <div className={stylesTheme.loading}>Loading</div>}
                 {!loading && (tabIndex == 0 ? (
-                    <div className={styles.InformationSection}>
-                        <div className={styles.mainInformation}>
-                            <div className={styles.informationItem}>
+                    <div className={stylesTheme.InformationSection}>
+                        <div className={stylesTheme.mainInformation}>
+                            <div className={stylesTheme.informationItem}>
                                 <p>Type:</p>
                                 <p>{`${selectedHabit?.type} Habit`}</p>
                             </div>
-                            <div className={styles.informationItem}>
+                            <div className={stylesTheme.informationItem}>
                                 <p>Goal:</p>
                                 <p>{`${selectedHabit?.goalsValue} ${selectedHabit?.goalsUnit} ${selectedHabit?.goalsPeriodicity}`}</p>
                             </div>
-                            <div className={styles.informationItem}>
+                            <div className={stylesTheme.informationItem}>
                                 <p>Total Completed Progress:</p>
                                 <p>{`${mainInfo?.completedProgress}`}</p>
                             </div>
                         </div>
-                        {/* <div className={styles.habitCardItem}>
-                            <table className={styles.habitInfoTable}>
+                        {/* <div className={stylesTheme.habitCardItem}>
+                            <table className={stylesTheme.habitInfoTable}>
                                 <tbody>
                                     <tr>
                                         <th>type:</th>
@@ -187,21 +189,21 @@ const ProgressBar = () => {
                         </div> */}
                     </div>
                 ) : (
-                    <div className={styles.statisticsSection}>
-                        {/* <div className={styles.habitProgress}>
-                            <div className={styles.habitProgressItem}>
-                                <div className={styles.habitProgressItemTitle}>
+                    <div className={stylesTheme.statisticsSection}>
+                        {/* <div className={stylesTheme.habitProgress}>
+                            <div className={stylesTheme.habitProgressItem}>
+                                <div className={stylesTheme.habitProgressItemTitle}>
                                     <p>Done</p>
                                 </div>
-                                <div className={styles.habitProgressItemValue}>
+                                <div className={stylesTheme.habitProgressItemValue}>
                                     <p>0</p>
                                 </div>
                             </div>
-                            <div className={styles.habitProgressItem}>
-                                <div className={styles.habitProgressItemTitle}>
+                            <div className={stylesTheme.habitProgressItem}>
+                                <div className={stylesTheme.habitProgressItemTitle}>
                                     <p>Failed</p>
                                 </div>
-                                <div className={styles.habitProgressItemValue}>
+                                <div className={stylesTheme.habitProgressItemValue}>
                                     <p>0</p>
                                 </div>
                             </div>

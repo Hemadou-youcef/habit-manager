@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 
 // Styles
 import styles from '../../template/habit-list/habitsList.module.css';
+import stylesDarkTheme from '../../template/habit-list/habitsListDarkTheme.module.css';
 
 // Components
 import axios from 'axios';
@@ -46,7 +47,8 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
     const [progressEnd, setProgressEnd] = useState<boolean | undefined>(readOnly ? undefined : isProgressEnd(habit as HabitWithProgress));
     const [options, setOptions] = useState(false);
     const [progress, setProgress] = useState<Progress | undefined>(readOnly ? undefined : (habit as HabitWithProgress).progress as Progress);
-    const { selectHabit }: { selectHabit(habit: Habit): void } = useDataContext();
+    const { selectHabit, theme }: { selectHabit(habit: Habit): void, theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
 
     const [showTimer, setShowTimer] = useState<boolean>(false);
 
@@ -145,12 +147,12 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
 
     return (
         <>
-            <div className={`${styles.habit} ${progressEnd ? styles.done : ''}`} >
-                <div className={styles.habitDone} ></div>
+            <div className={`${stylesTheme.habit} ${progressEnd ? stylesTheme.done : ''}`} >
+                <div className={stylesTheme.habitDone} ></div>
 
-                <div className={styles.habitDetails}>
-                    <div className={styles.habitInfo}>
-                        <div className={styles.habitIcon} style={{ backgroundColor: habit.accentColor }}>
+                <div className={stylesTheme.habitDetails}>
+                    <div className={stylesTheme.habitInfo}>
+                        <div className={stylesTheme.habitIcon} style={{ backgroundColor: habit.accentColor }}>
                             <HabitsgroupsIcons
                                 currentIcon={habit.icon}
                                 showOnlyMode={true}
@@ -158,27 +160,27 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
                                 onIconChange={(value: string) => { }}
                             />
                         </div>
-                        <div className={styles.habitNameContainer} style={{ textDecoration: progressEnd && habit?.type == 'good' ? 'line-through' : 'none' }}>
-                            <p className={styles.habitName}>
+                        <div className={stylesTheme.habitNameContainer} style={{ textDecoration: progressEnd && habit?.type == 'good' ? 'line-through' : 'none' }}>
+                            <p className={stylesTheme.habitName}>
                                 {habit.name}
                             </p>
-                            <p className={styles.habitProgressText}>
+                            <p className={stylesTheme.habitProgressText}>
                                 {readOnly ? `${habit.goalsValue > 0 ? habit.goalsValue : "∞"} ${habit.goalsUnit}` : (habit.type == 'good') ? `[${(progress as Progress)?.value}/${habit.goalsValue > 0 ? habit.goalsValue : "∞"} ${habit.goalsUnit}]` : null}
                             </p>
                         </div>
 
                     </div>
                     {!readOnly && !progressEnd && habit.goalsValue > 0 && habit.type == 'good' && (
-                        <div className={styles.habitProgress}>
-                            <div className={styles.progress}>
-                                <div className={styles.progressDone} style={{ width: `${(progress as Progress)?.value * 100 / habit.goalsValue}%`, backgroundColor: habit.accentColor }}></div>
+                        <div className={stylesTheme.habitProgress}>
+                            <div className={stylesTheme.progress}>
+                                <div className={stylesTheme.progressDone} style={{ width: `${(progress as Progress)?.value * 100 / habit.goalsValue}%`, backgroundColor: habit.accentColor }}></div>
                             </div>
-                            {/* <p className={styles.progressText}>{habit.progress * 100}%</p> */}
+                            {/* <p className={stylesTheme.progressText}>{habit.progress * 100}%</p> */}
                         </div>
                     )}
-                    <div className={styles.habitActions}>
+                    <div className={stylesTheme.habitActions}>
 
-                        <div className={styles.habitFillButton}>
+                        <div className={stylesTheme.habitFillButton}>
                             {!readOnly && !progressEnd && (
                                 <>
                                     {habit.goalsUnit === 'min' &&
@@ -209,33 +211,33 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
 
                         </div>
 
-                        <div className={styles.habitActionButton} ref={optionsRef}>
-                            <div className={styles.habitActionButtonIcon} onClick={() => setOptions(!options)}>
+                        <div className={stylesTheme.habitActionButton} ref={optionsRef}>
+                            <div className={stylesTheme.habitActionButtonIcon} onClick={() => setOptions(!options)}>
                                 <BiDotsVertical />
                             </div>
                             <div
-                                className={styles.habitActionDropDown}
+                                className={stylesTheme.habitActionDropDown}
                                 style={{ display: options ? 'block' : 'none' }}
 
                             >
 
                                 {!readOnly && !progressEnd && (
-                                    <div className={styles.habitActionDropDownItem} onClick={handleMarkAsDone}>
+                                    <div className={stylesTheme.habitActionDropDownItem} onClick={handleMarkAsDone}>
                                         <BsCheckLg />
                                         Mark as Done
                                     </div>
                                 )}
                                 {!readOnly && (
-                                    <div className={styles.habitActionDropDownItem} onClick={handleReturnToDefaulValue}>
+                                    <div className={stylesTheme.habitActionDropDownItem} onClick={handleReturnToDefaulValue}>
                                         <BiReset />
                                         Reset Value
                                     </div>
                                 )}
-                                <div className={styles.habitActionDropDownItem} onClick={handleSelectHabit}>
+                                <div className={stylesTheme.habitActionDropDownItem} onClick={handleSelectHabit}>
                                     <IoStatsChartSharp />
                                     View Statistics
                                 </div>
-                                <div className={styles.habitActionDropDownItem} onClick={handleEdit}>
+                                <div className={stylesTheme.habitActionDropDownItem} onClick={handleEdit}>
                                     <AiFillEdit />
                                     Edit
                                 </div>

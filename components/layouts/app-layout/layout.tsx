@@ -10,11 +10,11 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 // Styles
 import styles from './layout.module.css';
+import stylesDarkTheme from './layoutDarkTheme.module.css';
 
 // Components
 import SideBar from '@/components/sidebar/sidebar'
 import ProgressBar from '@/components/progress/progress'
-
 
 // Typescript Types
 import { Habit, HabitsGroup } from '@/types';
@@ -27,15 +27,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const { data: session, status } = useSession();
     const router = useRouter();
 
+    const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
+    const [habitsGroupList, setHabitsGroupList] = useState<HabitsGroup[]>([]);
+    const [theme, setTheme] = useState('light');
 
     useEffect(() => {
         if (status === 'unauthenticated' && router.pathname !== '/auth/signIn') {
-            router.push('/auth/signIn'); 
+            router.push('/auth/signIn');
         }
+        setTheme(localStorage.getItem('theme') || 'light');
     }, [status]);
-
-    const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
-    const [habitsGroupList, setHabitsGroupList] = useState<HabitsGroup[]>([]);
 
     const selectHabit = (habit: Habit | null) => {
         setSelectedHabit(habit);
@@ -43,16 +44,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const refreshGroupListData = (groupList: HabitsGroup[]) => {
         setHabitsGroupList(groupList)
     }
+    const handleToggleTheme = () => {
+        setTheme(theme === 'light' ? 'dark' : 'light');
+        localStorage.setItem('theme', theme === 'light' ? 'dark' : 'light');
+    }
+
     const dataContextValue = {
         selectedHabit,
         selectHabit,
         habitsGroupList,
-        refreshGroupListData
+        refreshGroupListData,
+        theme,
+        handleToggleTheme,
     }
+
+
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+
     if (status === 'loading' || (status === 'authenticated' && !session)) return (
         <>
-            <div className={styles.pageLoading}>
-                <div className={styles.spinner}>
+            <div className={stylesTheme.pageLoading}>
+                <div className={stylesTheme.spinner}>
                 </div>
             </div>
         </>
@@ -66,26 +78,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {(status === 'authenticated') &&
-                <main className={`${(status === 'authenticated') ? styles.app : styles.notLoggedApp}`}>
+                <main className={`${(status === 'authenticated') ? stylesTheme.app : stylesTheme.notLoggedApp}`}>
 
-                    <div className={styles.sidebar}>
+                    <div className={stylesTheme.sidebar}>
                         <SideBar session={session} status={status} signOut={signOut} />
                     </div>
-                    <div className={styles.main}>
+                    <div className={stylesTheme.main}>
                         {children}
                     </div>
-                    <div className={styles.progress}>
+                    <div className={stylesTheme.progress}>
                         <ProgressBar />
                     </div>
                 </main>
             }
             {(status === 'unauthenticated') && window.location.pathname === '/auth/signIn' &&
-                <div className={styles.notLogged}>
-                    <div className={styles.notLoggedContent}>
-                        <div className={styles.notLoggedTitle}>
+                <div className={stylesTheme.notLogged}>
+                    <div className={stylesTheme.notLoggedContent}>
+                        <div className={stylesTheme.notLoggedTitle}>
                             Habits Manager
                         </div>
-                        <div className={styles.notLoggedDescription}>
+                        <div className={stylesTheme.notLoggedDescription}>
                             The best app to manage your habits
                         </div>
                         {children}

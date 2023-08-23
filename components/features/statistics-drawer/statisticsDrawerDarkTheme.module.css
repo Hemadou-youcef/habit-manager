@@ -1,0 +1,90 @@
+/* Dark Theme */
+.content {
+    padding: 10px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    background-color: #1f1f1f; /* Dark gray background */
+    color: #ffffff; /* Text color */
+}
+
+.controller {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.controller .type {
+    display: flex;
+    width: 50%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.controller .type button {
+    padding: 10px 5px;
+    margin: 0;
+    border: 0px;
+    background-color: #2a67f4;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: capitalize;
+    width: 100%;
+    cursor: pointer;
+}
+
+.controller .type button:hover {
+    background-color: #4d72c9;
+}
+
+.controller .type button:active {
+    background-color: #335196;
+}
+
+.controller .itemContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 600px;
+}
+
+.controller .itemContainer .item {
+    display: flex;
+    gap: 5px;
+}
+
+.controller .itemContainer .item button,
+.controller .itemContainer .item select {
+    display: flex;
+    align-items: center;
+    padding: 7px 10px;
+    margin: 0;
+    border-radius: 5px;
+    border: 1px solid #444; /* Darker border color */
+    background-color: #333; /* Dark gray background */
+    color: #ccc; /* Light gray text color */
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: capitalize;
+    cursor: pointer;
+}
+
+.controller .itemContainer .item button:hover {
+    background-color: #444; /* Darker background color */
+}
+
+.controller .itemContainer .item button:active {
+    background-color: #555; /* Slightly lighter than the background */
+}
+
+.body {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #282828; /* Dark gray background */
+    width: 100%;
+}

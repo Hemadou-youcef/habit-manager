@@ -3,11 +3,13 @@ import { useState } from "react";
 
 // styles
 import styles from "./habitsItem.module.css"
+import stylesDarkTheme from "./habitsItemDarkTheme.module.css"
 
 // Icons
 import { BiSolidDownArrow, BiSolidRightArrow, BiSolidUpArrow } from "react-icons/bi";
 
 // Components
+import { useDataContext } from "@/components/layouts/app-layout/layout";
 import HabitItem from "../habit-item/habitItem";
 import ElementAnimator from "@/components/features/element-animator/elementAnimator";
 
@@ -24,6 +26,8 @@ type HabitsItem = {
 }
 
 const HabitsItem = ({ title, isOpen = true, habitList, readOnly, handleEditHabit, handleEditHabitProgress }: HabitsItem) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
     const [showHabits, setShowHabits] = useState<boolean>(isOpen);
     // #16ff5033
     return (
@@ -31,7 +35,7 @@ const HabitsItem = ({ title, isOpen = true, habitList, readOnly, handleEditHabit
             {habitList.length > 0 &&
                 (
                     <button
-                        className={styles.subHabits}
+                        className={stylesTheme.subHabits}
 
 
                         onClick={() => setShowHabits(!showHabits)}
@@ -41,10 +45,10 @@ const HabitsItem = ({ title, isOpen = true, habitList, readOnly, handleEditHabit
                     </button>
                 )
             }
-            <div className={styles.subHabitsContentContainer}>
+            <div className={stylesTheme.subHabitsContentContainer}>
                 <ElementAnimator showElement={showHabits} type={6} duration={300}>
                     {habitList.map((habit, index) => (
-                        <div key={habit.id} className={styles.subHabitsContent} >
+                        <div key={habit.id} className={stylesTheme.subHabitsContent} >
                             <HabitItem
                                 habit={habit as (Habit | HabitWithProgress)}
                                 editHabit={handleEditHabit}

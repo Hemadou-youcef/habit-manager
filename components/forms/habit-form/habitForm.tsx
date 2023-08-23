@@ -5,8 +5,10 @@ import { useEffect, useState } from 'react';
 
 // Styles
 import styles from './habitForm.module.css'
+import stylesDarkTheme from './habitFormDarkTheme.module.css'
 
 // Components
+import { useDataContext } from '@/components/layouts/app-layout/layout';
 import axios from 'axios';
 import useSWR, { SWRResponse } from "swr";
 import Overlay from '@/components/features/overlay/overlay'
@@ -28,6 +30,9 @@ const getUserHabitsGroups = async () => {
 }
 
 const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh, closeForm }: { defaulGrouptValues?: number, data: Habit | null, editMode: boolean, refresh: () => void, closeForm: () => void }) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+    
     // Form Data
     const [formData, setFormData] = useState({
         id: data?.id || 0,
@@ -125,7 +130,7 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                 return goalsPeriodicityOptions[0].value.map((day) => (
                     <div
                         key={day}
-                        className={`${styles.option} ${formData.goalsPeriodicityValues.includes((day as string)) ? styles.active : styles.inactive}`}
+                        className={`${stylesTheme.option} ${formData.goalsPeriodicityValues.includes((day as string)) ? stylesTheme.active : stylesTheme.inactive}`}
                         onClick={() => {
                             if (formData.goalsPeriodicityValues.includes((day as string))) {
                                 setFormData({ ...formData, goalsPeriodicityValues: formData.goalsPeriodicityValues.filter((d) => d !== day) })
@@ -145,7 +150,7 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                 return goalsPeriodicityOptions[1].value.map((day) => (
                     <div
                         key={day}
-                        className={`${styles.option} ${formData.goalsPeriodicityValues.includes((day as string)) ? styles.active : styles.inactive}`}
+                        className={`${stylesTheme.option} ${formData.goalsPeriodicityValues.includes((day as string)) ? stylesTheme.active : stylesTheme.inactive}`}
                         onClick={() => {
                             if (formData.goalsPeriodicityValues.includes((day as string))) {
                                 setFormData({ ...formData, goalsPeriodicityValues: [] })
@@ -165,7 +170,7 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                 return goalsPeriodicityOptions[2].value.map((month) => (
                     <div
                         key={month}
-                        className={`${styles.option} ${formData.goalsPeriodicityValues.includes((month as string)) ? styles.active : styles.inactive}`}
+                        className={`${stylesTheme.option} ${formData.goalsPeriodicityValues.includes((month as string)) ? stylesTheme.active : stylesTheme.inactive}`}
                         onClick={() => {
                             if (formData.goalsPeriodicityValues.includes((month as string))) {
                                 setFormData({ ...formData, goalsPeriodicityValues: [] })
@@ -183,16 +188,16 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
     }
     return (
         <Overlay width="500px" closeOverlay={() => closeForm()} closeOnBackgroundClick={true}>
-            <div className={styles.habitForm}>
+            <div className={stylesTheme.habitForm}>
                 <form onSubmit={(e) => handleSubmit(e)}>
-                    <div className={styles.header}>
-                        <p className={styles.title}>New Habit</p>
+                    <div className={stylesTheme.header}>
+                        <p className={stylesTheme.title}>New Habit</p>
                     </div>
-                    <div className={styles.body}>
-                        <div className={styles.form}>
-                            <div className={styles.formGroup} style={{ flexDirection: 'row' }}>
+                    <div className={stylesTheme.body}>
+                        <div className={stylesTheme.form}>
+                            <div className={stylesTheme.formGroup} style={{ flexDirection: 'row' }}>
                                 <input
-                                    className={styles.input}
+                                    className={stylesTheme.input}
                                     type="text"
                                     placeholder="Habit Name"
                                     style={{ width: '100%' }}
@@ -200,7 +205,7 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 />
                                 <input
-                                    className={styles.input}
+                                    className={stylesTheme.input}
                                     style={{ padding: 0, border: 0, height: "auto", overflow: "hidden", cursor: "pointer" }}
                                     type="color"
                                     value={formData.accentColor}
@@ -213,25 +218,25 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                     onIconChange={(value: string) => { setFormData({ ...formData, icon: value }) }}
                                 />
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Habit Type</label>
-                                <select className={styles.select} value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
+                            <div className={stylesTheme.formGroup}>
+                                <label className={stylesTheme.label}>Habit Type</label>
+                                <select className={stylesTheme.select} value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
                                     <option value="good">Good Habit</option>
                                     <option value="bad">Bad Habit</option>
                                 </select>
                             </div>
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Habits Groups</label>
-                                <select className={styles.select} value={formData.habitGroupId} onChange={(e) => setFormData({ ...formData, habitGroupId: parseInt(e.target.value) })}>
+                            <div className={stylesTheme.formGroup}>
+                                <label className={stylesTheme.label}>Habits Groups</label>
+                                <select className={stylesTheme.select} value={formData.habitGroupId} onChange={(e) => setFormData({ ...formData, habitGroupId: parseInt(e.target.value) })}>
                                     <option value={-1}>None</option>
                                     {habitsGroups && (habitsGroups as HabitsGroup[]).map((group: HabitsGroup) => (
                                         <option key={group.id} value={group.id}>{group.name}</option>
                                     ))}
                                 </select>
                             </div>
-                            {/* <div className={styles.formGroup}>
-                            <label className={styles.label}>Habit Group</label>
-                            <select className={styles.select}>
+                            {/* <div className={stylesTheme.formGroup}>
+                            <label className={stylesTheme.label}>Habit Group</label>
+                            <select className={stylesTheme.select}>
                                 <option value="1">Health</option>
                                 <option value="2">Wealth</option>
                                 <option value="3">Relationships</option>
@@ -240,10 +245,10 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                 <option value="6">Spirituality</option>
                             </select>
                         </div> */}
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Habit Start Date</label>
+                            <div className={stylesTheme.formGroup}>
+                                <label className={stylesTheme.label}>Habit Start Date</label>
                                 <input
-                                    className={styles.input}
+                                    className={stylesTheme.input}
                                     type="date"
                                     value={formData.startDate}
                                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
@@ -251,16 +256,16 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                             </div>
                             {formData.type == "good" &&
                                 <>
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label}>Goal(-1 is unlimited)</label>
-                                        <div className={styles.goal}>
-                                            <div className={styles.goalDetails}>
-                                                <div className={styles.goalDetailsBody}>
+                                    <div className={stylesTheme.formGroup}>
+                                        <label className={stylesTheme.label}>Goal(-1 is unlimited)</label>
+                                        <div className={stylesTheme.goal}>
+                                            <div className={stylesTheme.goalDetails}>
+                                                <div className={stylesTheme.goalDetailsBody}>
 
-                                                    <div className={styles.goalDetailsBodyGroup} style={{ width: '100%' }}>
+                                                    <div className={stylesTheme.goalDetailsBodyGroup} style={{ width: '100%' }}>
 
                                                         <input
-                                                            className={styles.input}
+                                                            className={stylesTheme.input}
                                                             type="number"
                                                             placeholder="Goal"
                                                             value={parseInt(formData.goalsValue)}
@@ -268,15 +273,15 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                                         />
 
                                                     </div>
-                                                    <div className={styles.goalDetailsBodyGroup}>
-                                                        <select className={styles.select} value={formData.goalsUnit} onChange={(e) => setFormData({ ...formData, goalsUnit: e.target.value })}>
+                                                    <div className={stylesTheme.goalDetailsBodyGroup}>
+                                                        <select className={stylesTheme.select} value={formData.goalsUnit} onChange={(e) => setFormData({ ...formData, goalsUnit: e.target.value })}>
                                                             <option value="times">Times</option>
                                                             <option value="min">Minutes</option>
                                                         </select>
                                                     </div>
-                                                    <div className={styles.goalDetailsBodyGroup}>
+                                                    <div className={stylesTheme.goalDetailsBodyGroup}>
                                                         <select
-                                                            className={styles.select}
+                                                            className={stylesTheme.select}
                                                             value={formData.goalsPeriodicity}
                                                             onChange={(e) => {
                                                                 setFormData({ ...formData, goalsPeriodicity: e.target.value, goalsPeriodicityValues: handleGoalsPeriodicity(e.target.value) });
@@ -292,9 +297,9 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                             </div>
                                         </div>
                                     </div>
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label}>Options</label>
-                                        <div className={styles.options}>
+                                    <div className={stylesTheme.formGroup}>
+                                        <label className={stylesTheme.label}>Options</label>
+                                        <div className={stylesTheme.options}>
                                             {goalsPeriodicityOptionsItems()}
                                         </div>
                                     </div>
@@ -306,28 +311,28 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                         </div>
 
                     </div>
-                    <div className={styles.footer}>
-                        <div className={styles.mainAction}  >
+                    <div className={stylesTheme.footer}>
+                        <div className={stylesTheme.mainAction}  >
                             {editMode && (
                                 <>
-                                    <button type='button' className={styles.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
+                                    <button type='button' className={stylesTheme.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
                                         Delete
                                     </button>
-                                    <button type='button' className={styles.archiveBtn} onClick={() => setFormData({ ...formData, isArchived: !formData.isArchived })}>
+                                    <button type='button' className={stylesTheme.archiveBtn} onClick={() => setFormData({ ...formData, isArchived: !formData.isArchived })}>
                                         {formData.isArchived ? 'Unarchive' : 'Archive'}
                                     </button>
                                 </>
                             )}
 
                         </div>
-                        <div className={styles.mainAction}>
-                            <button type='button' className={styles.cancelBtn} onClick={() => closeForm()}>
+                        <div className={stylesTheme.mainAction}>
+                            <button type='button' className={stylesTheme.cancelBtn} onClick={() => closeForm()}>
                                 Cancel
                             </button>
                             <input
                                 type="submit"
                                 value={loading ? 'Loading...' : editMode ? 'Edit' : 'Save'}
-                                className={`${styles.submit} ${editMode ? styles.bg_green : ""}`}
+                                className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
                                 disabled={loading || formData.name === '' || formData.startDate === '' || formData.goalsValue == "" || formData.goalsUnit === '' || formData.goalsPeriodicity === ''}
                             />
                         </div>

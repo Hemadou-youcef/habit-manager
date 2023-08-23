@@ -1,0 +1,45 @@
+/* Dark Theme */
+.content {
+    padding: 20px;
+    margin: 0;
+    background-color: #1f1f1f; /* Dark gray background */
+    color: #ffffff; /* Text color */
+}
+
+.question {
+    padding: 0px 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.actions button {
+    display: flex;
+    padding: 5px;
+    border: 1px solid #555; /* Darker border color */
+    border-radius: 100%;
+    background-color: #333; /* Dark gray background */
+    color: #fff; /* White text color */
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #444; /* Darker background color on hover */
+}
+
+.actions button:last-child {
+    border: 1px solid #dd4343;
+    background-color: #333; /* Dark gray background */
+    color: #dd4343;
+}
+
+.actions button:last-child:hover {
+    background-color: #492424; /* Darker red background on hover */
+}

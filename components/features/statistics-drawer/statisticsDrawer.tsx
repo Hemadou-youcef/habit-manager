@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 
 // Styles
 import styles from './statisticsDrawer.module.css'
+import stylesDarkTheme from './statisticsDrawerDarkTheme.module.css'
 
 // Components
+import { useDataContext } from '@/components/layouts/app-layout/layout';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import ElementAnimator from '../element-animator/elementAnimator';
@@ -44,6 +46,9 @@ type barChart = {
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, PointElement, LineElement, Title, Tooltip, Legend);
 
 const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data: barChart, setStatisticsType: (value: string) => void, setStatisticsDate: (value: Date) => void }) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+
     const [currentDate, setCurrentDate] = useState<Value>(new Date())
 
     const [showCalendar, setShowCalendar] = useState(false)
@@ -101,9 +106,9 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
 
     return (
         <>
-            <div className={styles.content}>
-                <div className={styles.controller}>
-                    {/* <div className={styles.type}>
+            <div className={stylesTheme.content}>
+                <div className={stylesTheme.controller}>
+                    {/* <div className={stylesTheme.type}>
                         {statisticsType.map((value: string) => (
                             <button
 
@@ -112,8 +117,8 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
                             </button>
                         ))}
                     </div> */}
-                    <div className={styles.itemContainer}>
-                        <div className={styles.item}>
+                    <div className={stylesTheme.itemContainer}>
+                        <div className={stylesTheme.item}>
                             <button
                                 onClick={() => setDateToday()}
                             >
@@ -130,7 +135,7 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
                                 <BiChevronRight size={18} />
                             </button>
                         </div>
-                        <div className={styles.item}>
+                        <div className={stylesTheme.item}>
                             <button
                                 onClick={() => setShowCalendar(!showCalendar)}
                             >
@@ -145,7 +150,7 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
                     </div>
 
                 </div>
-                <div className={styles.body}>
+                <div className={stylesTheme.body}>
                     <Bar
                         data={data}
                         height={350}

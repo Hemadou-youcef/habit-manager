@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 
 // Styles
 import styles from './manageHabits.module.css'
+import stylesDarkTheme from './manageHabitsDarkTheme.module.css'
 
 // Components
+import { useDataContext } from '@/components/layouts/app-layout/layout';
 import HabitsItem from '../../list-item/habits-item/habitsItem';
 import ElementAnimator from '@/components/features/element-animator/elementAnimator';
 import HabitForm from '@/components/forms/habit-form/habitForm';
@@ -16,6 +18,9 @@ import { AiOutlinePlus } from 'react-icons/ai';
 
 
 const ManageHabits = ({ habits, loading, refresh }: { habits: (Habit | Habit[])[][], loading: boolean, refresh: () => void }) => {
+    const { theme }: { theme: string } = useDataContext();
+    const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
+
     const [habitList, setHabitList] = useState<(Habit | Habit[])[][]>(habits);
 
     const [tabIndex, setTabIndex] = useState<number>(0);
@@ -54,43 +59,43 @@ const ManageHabits = ({ habits, loading, refresh }: { habits: (Habit | Habit[])[
 
     return (
         <>
-            <div className={styles.content}>
-                <div className={styles.header}>
-                    <div className={styles.title}>
+            <div className={stylesTheme.content}>
+                <div className={stylesTheme.header}>
+                    <div className={stylesTheme.title}>
                         <p>Manage Habits</p>
-                        <button className={styles.addButton} onClick={() => setShowHabitForm(true)}>
+                        <button className={stylesTheme.addButton} onClick={() => setShowHabitForm(true)}>
                             <AiOutlinePlus size={15} />
                             {/* Add Habits */}
                         </button>
                     </div>
 
-                    <div className={styles.habitsSections}>
+                    <div className={stylesTheme.habitsSections}>
                         <button
                             style={{ color: '#1ec448', borderColor: '#1ec448', }}
-                            className={tabIndex == 0 ? styles.active : undefined}
+                            className={tabIndex == 0 ? stylesTheme.active : undefined}
                             onClick={() => handleTabChange(0, habitList)}
                         >
                             {`Good Habits (${habitList[0].length})`}
                         </button>
                         <button
                             style={{ color: '#ff2828', borderColor: '#ff2828' }}
-                            className={tabIndex == 1 ? styles.active : undefined}
+                            className={tabIndex == 1 ? stylesTheme.active : undefined}
                             onClick={() => handleTabChange(1, habitList)}
                         >
                             {`Bad Habits (${habitList[1].length})`}
                         </button>
                         <button
                             style={{ color: '#757575', borderColor: '#757575' }}
-                            className={tabIndex == 2 ? styles.active : undefined}
+                            className={tabIndex == 2 ? stylesTheme.active : undefined}
                             onClick={() => handleTabChange(2, habitList)}
                         >
                             {`Archived Habits (${(habitList[2][0] as Habit[]).length + (habitList[2][1] as Habit[]).length})`}
                         </button>
                     </div>
                 </div>
-                <div className={styles.body}>
-                    {loading && <p className={styles.loading}>Loading...</p>}
-                    {!loading && (currentHabitSection).filter((value) => (value[0] as Habit[]).length != 0).length == 0 && <p className={styles.noHabits}>No Habits Found</p>}
+                <div className={stylesTheme.body}>
+                    {loading && <p className={stylesTheme.loading}>Loading...</p>}
+                    {!loading && (currentHabitSection).filter((value) => (value[0] as Habit[]).length != 0).length == 0 && <p className={stylesTheme.noHabits}>No Habits Found</p>}
                     {currentHabitSection.map((value, index) => (
                         <HabitsItem
                             title={`${value[1]} Habits`}

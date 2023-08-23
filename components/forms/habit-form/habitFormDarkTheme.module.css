@@ -1,16 +1,16 @@
+/* Dark Theme */
 .bg_green {
-    background-color: #19db2a !important;
-    color: white;
+    background-color: #0ca60c !important;
+    color: #ffffff;
 }
 
 .bg_green:active {
-    background-color: #55f362 !important;
+    background-color: #3ed33e !important;
 }
 
 .bg_green:disabled {
-    background-color: #9ae98f !important;
+    background-color: #6aa96a !important;
 }
-
 
 .habitForm {
     padding: 0px;
@@ -31,6 +31,7 @@
 
 .body {
     padding: 20px;
+    background-color: #282828;
 }
 
 .body .form {
@@ -48,24 +49,26 @@
 .body .form .formGroup .label {
     font-size: 12px;
     font-weight: 600;
-    color: #727272;
+    color: #a0a0a0;
 }
 
 .body .form .formGroup .input {
-    border: 1px solid #e4e2e2;
+    border: 1px solid #363636;
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;
-    color: #000;
+    color: #ffffff;
+    background-color: #1f1f1f;
 }
 
 .body .form .formGroup .input:focus {
     outline: none;
+    border-color: #4d90fe;
 }
 
 .body .form .formGroup .input::placeholder {
-    color: #000;
+    color: #a0a0a0;
     font-size: 12px;
     font-weight: 600;
 }
@@ -73,29 +76,32 @@
 .body .form .formGroup .input[type="checkbox"] {
     width: 15px;
     height: 15px;
-    border: 1px solid #e4e2e2;
+    border: 1px solid #363636;
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;
-    color: #000;
+    color: #ffffff;
+    background-color: #1f1f1f;
 }
 
 .body .form .formGroup .select {
-    border: 1px solid #e4e2e2;
+    border: 1px solid #363636;
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;
-    color: #000;
+    color: #ffffff;
+    background-color: #1f1f1f;
 }
 
 .body .form .formGroup .select:focus {
     outline: none;
+    border-color: #4d90fe;
 }
 
 .body .form .formGroup .select::placeholder {
-    color: #000;
+    color: #a0a0a0;
     font-size: 12px;
     font-weight: 600;
 }
@@ -134,38 +140,41 @@
 .body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .label {
     font-size: 12px;
     font-weight: 600;
-    color: #000;
+    color: #ffffff;
 }
 
 .body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .input {
-    border: 1px solid #e4e2e2;
+    border: 1px solid #363636;
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;
-    color: #000;
+    color: #ffffff;
+    background-color: #1f1f1f;
 }
 
 .body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .input:focus {
     outline: none;
+    border-color: #4d90fe;
 }
 
 .body .form .formGroup .goal .goalDetails .goalDetailsBody .goalDetailsBodyGroup .select {
-    border: 1px solid #e4e2e2;
+    border: 1px solid #363636;
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;
-    color: #000;
+    color: #ffffff;
+    background-color: #1f1f1f;
 }
 
 .body .form .formGroup .options {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border: 3px solid #e4e2e2;
+    border: 3px solid #363636;
     border-radius: 10px;
-    background-color: #f0f0f0;
+    background-color: #1f1f1f;
     overflow: hidden;
 }
 
@@ -174,7 +183,6 @@
     width: 10%;
     height: 50px;
     font-size: 12px;
-    /* border-radius: 5px; */
     font-weight: 600;
     cursor: pointer;
     text-align: center;
@@ -182,22 +190,20 @@
 }
 
 .body .form .formGroup .options .option.active {
-    /* border: 1px solid #487bf3; */
-    background-color: #487bf3;
-    color: #fff;
+    background-color: #4d90fe;
+    color: #ffffff;
 }
 
 .body .form .formGroup .options .option.inactive {
-    /* border: 1px solid #487bf3; */
-    color: #000;
+    color: #ffffff;
 }
 
-.footer{
+.footer {
     padding: 10px;
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    background-color: #f0f0f0;
+    background-color: #1f1f1f;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     overflow: hidden;
@@ -207,8 +213,8 @@
     padding: 8px;
     border-radius: 3px;
     border: 0;
-    background-color: #2a67f4;
-    color: #fff;
+    background-color: #4d90fe;
+    color: #ffffff;
     font-size: 13px;
     font-weight: 500;
     gap: 3px;
@@ -217,7 +223,7 @@
 }
 
 .footer .submit:active {
-    background-color: #2a67f4d9;
+    background-color: #4d90fed9;
 }
 
 .footer .submit:disabled {
@@ -229,9 +235,9 @@
     padding: 8px;
     border-radius: 3px;
     border: 0;
-    border: 1px solid #cecece;
-    background-color: #fff;
-    color: #3a3a3a;
+    border: 1px solid #4d4d4d;
+    background-color: #1f1f1f;
+    color: #a0a0a0;
     font-size: 13px;
     font-weight: 500;
     gap: 3px;
@@ -249,7 +255,7 @@
     border-radius: 3px;
     border: 0;
     border: 1px solid #dd4343;
-    background-color: #fff;
+    background-color: #1f1f1f;
     color: #dd4343;
     font-size: 13px;
     font-weight: 600;
@@ -258,12 +264,12 @@
     width: 70px;
 }
 
-.footer .archiveBtn{
+.footer .archiveBtn {
     padding: 8px;
     border-radius: 3px;
     border: 0;
     border: 1px solid #4d43dd;
-    background-color: #fff;
+    background-color: #1f1f1f;
     color: #4d43dd;
     font-size: 13px;
     font-weight: 600;
