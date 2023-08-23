@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useDataContext } from '@/components/layouts/app-layout/layout';
 import Overlay from '@/components/features/overlay/overlay'
 import HabitsGroupIcons from '@/components/forms/icons-drop-down/habitsGroupIcons';
-import { BiDotsVertical } from 'react-icons/bi';
+import Spinner from '@/components/features/spinner/spinner';
 
 // Typescript Types
 import { HabitsGroup } from '@/types';
@@ -123,13 +123,14 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
                         <button className={stylesTheme.cancelBtn} onClick={() => closeForm()}>
                             Cancel
                         </button>
-                        <input
+                        <button
                             type="submit"
-                            value={loading ? 'Loading...' : editMode ? 'Edit' : 'Save'}
                             className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
                             onClick={() => handleSubmit()}
                             disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
-                        />
+                        >
+                            {loading ? <Spinner width='15px' height='15px'/> : editMode ? 'Edit' : 'Save'}
+                        </button>
                     </div>
                 </div>
             </div>

@@ -92,7 +92,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         id: parseInt(id as string)
                     }
                 })
-                console.log(deletedHabit)
                 res.status(205).json({ message: "Habit Deleted successfully", data: deletedHabit });
             default:
                 return res.status(405).json({ message: 'Method not allowed' });

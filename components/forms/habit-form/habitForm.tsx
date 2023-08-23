@@ -21,6 +21,7 @@ import { Habit, HabitsGroup } from '@/types/index'
 import HabitsgroupsIcons from '../icons-drop-down/habitsGroupIcons';
 import ElementAnimator from '@/components/features/element-animator/elementAnimator';
 import Alert from '@/components/features/alert/alert';
+import Spinner from '@/components/features/spinner/spinner';
 
 // Methods
 const getUserHabitsGroups = async () => {
@@ -32,7 +33,7 @@ const getUserHabitsGroups = async () => {
 const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh, closeForm }: { defaulGrouptValues?: number, data: Habit | null, editMode: boolean, refresh: () => void, closeForm: () => void }) => {
     const { theme }: { theme: string } = useDataContext();
     const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
-    
+
     // Form Data
     const [formData, setFormData] = useState({
         id: data?.id || 0,
@@ -329,12 +330,13 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                             <button type='button' className={stylesTheme.cancelBtn} onClick={() => closeForm()}>
                                 Cancel
                             </button>
-                            <input
+                            <button
                                 type="submit"
-                                value={loading ? 'Loading...' : editMode ? 'Edit' : 'Save'}
                                 className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
                                 disabled={loading || formData.name === '' || formData.startDate === '' || formData.goalsValue == "" || formData.goalsUnit === '' || formData.goalsPeriodicity === ''}
-                            />
+                            >
+                                {loading ? <Spinner width='15px' height='15px' /> : editMode ? 'Edit' : 'Save'}
+                            </button>
                         </div>
                     </div>
                 </form>
