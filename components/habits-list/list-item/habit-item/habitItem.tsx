@@ -11,6 +11,7 @@ import axios from 'axios';
 import Timer from '@/components/features/timer/timer'
 import { useDataContext } from '@/components/layouts/app-layout/layout';
 import HabitsgroupsIcons from '@/components/forms/icons-drop-down/habitsGroupIcons';
+import Spinner from '@/components/features/spinner/spinner';
 
 // Icons 
 import { BiDotsVertical, BiReset } from 'react-icons/bi';
@@ -30,7 +31,7 @@ type HabitItem = {
 
 // SUPPLY METHODS
 const isProgressEnd = (habit: HabitWithProgress): boolean => {
-    const _habitProgress: Progress = (habit.progress as Progress);
+    const _habitProgress: Progress = (habit?.progress as Progress);
     if (habit.type == 'good') {
         if (habit.goalsValue > 0) {
             return habit.goalsValue <= _habitProgress.value;
@@ -51,6 +52,7 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
     const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
 
     const [showTimer, setShowTimer] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const optionsRef = useRef<HTMLDivElement>(null);
 
@@ -64,8 +66,12 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
         }
     }, [options]);
 
+    // useEffect(() => {
+
+
     const handleEditProgress = () => {
         // EDIT PROGRESS OF HABIT
+        setLoading(true);
         axios.put(`/api/progress/${(progress as Progress).id}`, {
             value: (progress as Progress).value,
         })
@@ -76,6 +82,9 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
             })
             .catch((err) => {
                 console.log(err);
+            })
+            .finally(() => {
+                setLoading(false);
             })
     }
 
@@ -118,7 +127,6 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
     }
 
     const handleFail = () => {
-        console.log('fail');
         (progress as Progress).value = 0;
         handleEditProgress()
         setProgressEnd(true);
@@ -145,6 +153,32 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
         setOptions(false);
     }
 
+    const formatDateDifference = (startDate: Date, endDate: Date): string => {
+        const {_startDate, _endDate} = { _startDate: new Date(startDate).getTime(), _endDate: new Date(endDate).getTime() };
+        const timeDiffInSeconds = Math.floor((_endDate - _startDate) / 1000);
+      
+        if (timeDiffInSeconds < 60) {
+          return `${timeDiffInSeconds} seconds`;
+        } else if (timeDiffInSeconds < 3600) {
+          const mins = Math.floor(timeDiffInSeconds / 60);
+          return `${mins} mins`;
+        } else if (timeDiffInSeconds < 86400) {
+          const hours = Math.floor(timeDiffInSeconds / 3600);
+          const mins = Math.floor((timeDiffInSeconds % 3600) / 60);
+          return `${hours} Hours and ${mins} mins`;
+        } else if (timeDiffInSeconds < 2592000) {
+          const days = Math.floor(timeDiffInSeconds / 86400);
+          return `${days} days`;
+        } else if (timeDiffInSeconds < 31536000) {
+          const months = Math.floor(timeDiffInSeconds / 2592000);
+          return `${months} months`;
+        } else {
+          const years = Math.floor(timeDiffInSeconds / 31536000);
+          const months = Math.floor((timeDiffInSeconds % 31536000) / 2592000);
+          return `${years} years and ${months} months`;
+        }
+      }
+
     return (
         <>
             <div className={`${stylesTheme.habit} ${progressEnd ? stylesTheme.done : ''}`} >
@@ -165,7 +199,14 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
                                 {habit.name}
                             </p>
                             <p className={stylesTheme.habitProgressText}>
-                                {readOnly ? `${habit.goalsValue > 0 ? habit.goalsValue : "∞"} ${habit.goalsUnit}` : (habit.type == 'good') ? `[${(progress as Progress)?.value}/${habit.goalsValue > 0 ? habit.goalsValue : "∞"} ${habit.goalsUnit}]` : null}
+                                {
+                                    readOnly
+                                        ? `${habit.goalsValue > 0
+                                            ? habit.goalsValue : "∞"} ${habit.goalsUnit}`
+                                        : (habit.type == 'good')
+                                            ? `[${(progress as Progress)?.value}/${habit.goalsValue > 0 ? habit.goalsValue : "∞"} ${habit.goalsUnit}]`
+                                            : !progressEnd && `${formatDateDifference(progress?.lastFailDate || habit.startDate, new Date())} of success`
+                                }
                             </p>
                         </div>
 
@@ -187,14 +228,14 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
                                         (
                                             <button onClick={() => setShowTimer(true)}>
                                                 <LuTimer size={18} />
-                                                Timer
+                                                {loading ? <Spinner border="1px" color="#a7a7a7" width="30px" height="30px"/> : 'Timer'}
                                             </button>
                                         )}
                                     {habit.goalsUnit === "times" && habit.type == 'good' &&
                                         (
                                             <button onClick={handleAddProgressOneTime}>
                                                 <AiOutlinePlus size={18} />
-                                                1
+                                                {loading ? <Spinner border="1px" color="#a7a7a7" width="10px" height="10px"/> : '1'}
                                             </button>
                                         )
                                     }

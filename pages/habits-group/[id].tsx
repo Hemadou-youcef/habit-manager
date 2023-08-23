@@ -20,7 +20,8 @@ const habitsGroup = () => {
 
     const [habitsGroup, setHabitsGroup] = useState<HabitsGroup>();
     const [habitsList, setHabitsList] = useState<Habit[][] | HabitWithProgress[][]>([[], [], [], []]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [Error, setError] = useState('');
 
     useEffect(() => {
         if (!router.isReady) return;
@@ -28,6 +29,7 @@ const habitsGroup = () => {
     }, [router.isReady, id])
 
     const handleRefreshHabitsList = () => {
+        setHabitsList([[], [], [], []]);
         setLoading(true);
         axios.get(`/api/habits-group/${id}`)
             .then((res) => {
@@ -36,15 +38,16 @@ const habitsGroup = () => {
                 const badHabits = data.habits.filter((habit: Habit) => habit.type === 'bad');
                 setHabitsGroup(data);
                 setHabitsList([goodHabits, badHabits, [], []]);
+                setError('');
             })
             .catch((err) => {
-                console.log(err);
+                setError(err.response.data.message);
             })
             .finally(() => {
                 setLoading(false);
             })
     }
-    if (!habitsGroup) return (
+    if (loading) return (
         <>
             <div style={{
                 display: 'flex',
@@ -52,14 +55,27 @@ const habitsGroup = () => {
                 alignItems: 'center',
                 padding: '20px'
             }}>
-                <Spinner width="40px" height="40px" />
+                <Spinner width="40px" height="40px" border="5px" color='#000' />
             </div>
         </>
     );
+    if(Error || !habitsGroup) return (
+        <>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px',
+                color: '#2a67f4'
+            }}>
+                <h1>{Error}</h1>
+            </div>
+        </>
+    )
     return (
         <>
             <HabitsList
-                title={habitsGroup.name}
+                title={habitsGroup?.name}
                 habits={habitsList}
                 habitsGroup={habitsGroup}
                 readOnly={true}

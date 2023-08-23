@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 // GET STATISTICS OF A HABIT
                 const { id, type = 'week', date } = req.query;
                 if (!date) return res.status(400).json({ message: 'Missing parameter' });
-                await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')
+                const habit = await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')
 
                 // SET STARTING DATE AND ENDING DATE
                 const choosenDate = new Date(date as string);
@@ -37,19 +37,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     where: {
                         habitId: parseInt(id as string),
                         createdAt: {
-                            gte: startOfChoosenDate,
-                            lte: endOfChoosenDate
+                            gt: startOfChoosenDate,
+                            lt: endOfChoosenDate
                         }
                     }
                 })
+
                 // FILL THE EMPTY PROGRESS TO USE IT IN CHART JS
                 const dateLabel = getDatesInRange(startOfChoosenDate, endOfChoosenDate, type);
-                let data = dateLabel.map((date) => {
-                    let progressValues = 0;
-                    const progressOfThisDate = progress.filter((value) => formatDate(value.createdAt, type) == date);
-                    progressOfThisDate.forEach((value) => progressValues += value.value);
-                    return progressValues;
+                const startDate = new Date(habit.startDate).getTime();
+                let data = getDatesInRange(startOfChoosenDate, endOfChoosenDate, 'yyyy-mm-dd').map((date) => {
+                    const progressOfThisDate = progress.filter((value) => formatDate(value.createdAt, type) == formatDate(new Date(date), type));
+                    
+                    let progressDefaultValues = habit.type == 'good' || new Date(date).getTime() < startDate ? 0 : 1;
+                    if (habit.type == 'good') {
+                        if (progressOfThisDate.length > 0) progressDefaultValues = progressOfThisDate[0].value;
+                    } else {
+                        if (progressOfThisDate.length > 0) progressDefaultValues = progressOfThisDate[0].value;
+                    }
+                    return progressDefaultValues;
                 });
+
 
                 // FILL THE BARCHART
                 const barChart = {
@@ -81,7 +89,8 @@ function formatDate(date: Date, type: string) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
-    if (type === 'year') return `${months[parseInt(month) - 1]}-${year}`;
+    if (type == 'yyyy-mm-dd') return `${year}-${month}-${day}`;
+    else if (type === 'year') return `${months[parseInt(month) - 1]}-${year}`;
 
     return `${day}-${months[parseInt(month) - 1]}`;
 }
@@ -113,5 +122,5 @@ const checkIfUserOwnsHabit = async (habitId: number, userId: string) => {
     })
     if (!habit) throw { statusCode: 404, message: "Habit not found" }
     if (userId !== habit.userId) throw { statusCode: 401, message: "Unauthorized" }
-    return true;
+    return habit;
 }

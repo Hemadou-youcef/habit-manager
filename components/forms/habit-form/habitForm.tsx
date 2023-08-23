@@ -339,7 +339,7 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                 className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
                                 disabled={loading || formData.name === '' || formData.startDate === '' || formData.goalsValue == "" || formData.goalsUnit === '' || formData.goalsPeriodicity === ''}
                             >
-                                {loading ? <Spinner width='15px' height='15px' /> : editMode ? 'Edit' : 'Save'}
+                                {loading ? <Spinner border="5px" color="#fff" width='15px' height='15px' /> : editMode ? 'Edit' : 'Save'}
                             </button>
                         </div>
                     </div>

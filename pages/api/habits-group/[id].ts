@@ -19,19 +19,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         const { id }: { id?: string } = req.query;
+        // Check if id is a number
+        if (isNaN(parseInt(id as string))) throw { statusCode: 400, message: "Invalid Habits Group ID" }
+
         await checkIfUserOwnsHabitsGroup(parseInt(id as string), session?.user?.id || '')
 
         switch (req.method) {
             case 'GET':
-                if (!id) {
-                    return res.status(400).json({ message: 'Missing parameter' })
-                }
                 const HabitsGroup: HabitsGroup | null = await prisma.habitsGroup.findFirst({
                     where: {
                         userId: session?.user?.id || '',
                         id: parseInt(id as string)
                     },
                 })
+                if(!HabitsGroup) throw { statusCode: 404, message: "Habits Group not found" }
 
                 if (HabitsGroup) {
                     const habitsList: Habit[] = await prisma.habits.findMany({

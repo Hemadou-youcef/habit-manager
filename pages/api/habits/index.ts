@@ -96,9 +96,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 })
 
-
-
-
                 // GET PROGRESS IF EXISTS, IF NOT CREATE IT
                 await Promise.all(filteredhabitList.map(async (habit: Habit) => {
                     const progress = await findHabitProgress(habit.type, habit.id, startOfChoosenDate, endOfChoosenDate);
@@ -154,32 +151,76 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 }
 
-
-const findHabitProgress = async (habitType: string, habitId: number, startOfToday: Date, endOfToday: Date) => {
+const findLastProgressFailDate = async (habitId: number) => {
     try {
-        // GET PROGRESS IF EXISTS
         const progress: Progress | null = await prisma.progress.findFirst({
             where: {
                 habitId: habitId,
-                createdAt: {
-                    gte: startOfToday,
-                    lte: endOfToday
-                }
+                value: 0
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
-        if (progress) return progress;
-        else {
-            // CREATE PROGRESS IF NOT EXISTS
-            const newProgress = await prisma.progress.create({
-                data: {
-                    habitId: habitId,
-                    value: habitType == 'good' ? 0 : 1,
-                    createdAt: startOfToday
-                }
-            })
-            return newProgress;
-        }
+        if (progress) return progress.createdAt;
+        else return null;
     } catch (error) {
         console.log(error);
     }
 }
+
+
+const findHabitProgress = async (habitType: string, habitId: number, startOfChoosenDate: Date, endOfChoosenDate: Date) => {
+    try {
+        // GET PROGRESS IF EXISTS
+        const progress: Progress | null = await prisma.progress.findFirst({
+            where: {
+                habitId,
+                createdAt: {
+                    gte: startOfChoosenDate,
+                    lte: endOfChoosenDate,
+                },
+            },
+        });
+
+        // IF HABIT IS GOOD AND PROGRESS EXISTS, RETURN PROGRESS
+        if (habitType === 'good' && progress) {
+            return progress;
+        }
+
+        // IF HABIT IS BAD GET LAST FAIL DATE
+        let lastProgressFailDate: Date | undefined | null;
+        if (habitType === 'bad') {
+            lastProgressFailDate = await findLastProgressFailDate(habitId);
+        }
+
+        // IF PROGRESS EXISTS RETURN PROGRESS
+        if (progress) {
+            const finalProgress = lastProgressFailDate
+                ? { ...progress, lastFailDate: lastProgressFailDate }
+                : progress;
+            return finalProgress;
+        }
+
+        // IF PROGRESS NOT EXISTS CREATE PROGRESS
+        const middleOfChoosenDate = new Date(
+            (startOfChoosenDate.getTime() + endOfChoosenDate.getTime()) / 2
+        );
+
+        const newProgress: Progress = await prisma.progress.create({
+            data: {
+                habitId,
+                value: habitType === 'good' ? 0 : 1,
+                createdAt: middleOfChoosenDate,
+            },
+        });
+
+        const finalNewProgress = lastProgressFailDate
+            ? { ...newProgress, lastFailDate: lastProgressFailDate }
+            : newProgress;
+
+        return finalNewProgress;
+    } catch (error) {
+        console.error(error);
+    }
+};

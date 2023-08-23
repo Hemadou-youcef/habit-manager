@@ -30,6 +30,7 @@ export default function Home() {
   }, [currentDate])
 
   const handleRefreshHabitsList = () => {
+    setHabitsList([[], [], [], []]);
     setLoading(true);
     axios.get(`/api/habits?date=${formatDate(currentDate)}`)
       .then((res) => {

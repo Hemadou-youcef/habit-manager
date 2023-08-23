@@ -37,7 +37,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 
 const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDate, refresh }: habitList) => {
-    const { theme }: { theme: string } = useDataContext();
+    const { selectedHabit, selectHabit, theme }: { selectedHabit: Habit, selectHabit: (habit: Habit) => void, theme: string } = useDataContext();
     const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
 
     const [habitsGroupInfo, setHabitsGroupInfo] = useState<HabitsGroup | undefined>(habitsGroup)
@@ -58,6 +58,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
     const router = useRouter();
 
     useEffect(() => {
+        handleTabChange(tabIndex, [[], [], [], []]);
         setHabitList(habits);
         handleTabChange(tabIndex, habits);
     }, [habits]);
@@ -118,6 +119,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
             if (habit.type == 'bad') _mustReplace = true
             else _mustReplace = ((habit.progress as Progress).value >= habit.goalsValue && habit.goalsValue > 0) || ((habit.progress as Progress).value == 0 && value == 'Done');
 
+           
             // SEARCH FOR THE HABIT IN THIS CURRENT SECTION
             const HabitIndex = habitList[index].findIndex((h) => h.id === habit.id);
             if (HabitIndex !== -1) {
@@ -133,8 +135,10 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
                     // REPLACE THE OLD HABIT BY NEW ONE
                     newHabitLists[0][HabitIndex] = habit;
                 }
+                handleTabChange(tabIndex, newHabitLists)
                 setHabitList(newHabitLists);
             }
+            if(selectedHabit?.id == habit?.id) selectHabit(habit);
         })
         resetValues()
         return false;
@@ -211,7 +215,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
                                 habitList={value[0] as Habit[]}
                                 handleEditHabit={handleEditHabit}
                                 handleEditHabitProgress={(habit: HabitWithProgress) => handleEditHabitProgress(value[1] as string, habit)}
-                                readOnly={false}
+                                readOnly={readOnly}
                                 key={index}
                             />
                         ))}

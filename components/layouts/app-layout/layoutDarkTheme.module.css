@@ -4,7 +4,7 @@
 .app {
     display: grid;
     grid-template-areas: "sidebar main progress";
-    grid-template-columns: 240px minmax(600px, 700px) auto;
+    grid-template-columns: 240px minmax(500px, auto) minmax(600px, 700px);
     height: 100vh;
     padding: 0;
     background-color: #292929;
@@ -83,10 +83,12 @@
     border-top: 5px solid #fff;
     animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

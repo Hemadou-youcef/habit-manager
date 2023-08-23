@@ -50,6 +50,7 @@ export type Progress = {
     id: number;
     habitId: number;
     value: number;
+    lastFailDate?: Date;
     createdAt: Date;
     updatedAt: Date;
 }

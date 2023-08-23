@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!session) return res.status(401).json({ message: "Unauthorized" })
     try {
         const { id }: { id?: string } = req.query;
+        if (isNaN(parseInt(id as string))) throw { statusCode: 400, message: "Invalid Progress ID" }
         await checkIfUserOwnsProgress(parseInt(id as string), session?.user?.id || '')
 
         switch (req.method) {

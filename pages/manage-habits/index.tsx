@@ -21,6 +21,7 @@ const AllHabits = () => {
     }, [])
 
     const handleRefreshHabitsList = () => {
+        setHabitsList([[], [], [[],[]]]);
         setLoading(true);
         axios.get(`/api/habits?withArchived=true`)
             .then((res) => {

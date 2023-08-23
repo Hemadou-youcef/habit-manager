@@ -37,7 +37,7 @@ const Alert = ({ text, onCancel, onConfirm }: { text: string, onCancel: () => vo
                             onConfirm();
                         }}
                     >
-                        {loading ? <Spinner width="30px" height="30px"/> : <BsCheck size={30} />}
+                        {loading ? <Spinner width="30px" height="30px" border='5px' color='white'/> : <BsCheck size={30} />}
                     </button>
                 </div>
             </div>

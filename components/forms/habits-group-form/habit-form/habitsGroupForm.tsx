@@ -35,9 +35,10 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false);
     const [cleanUpVariable, setCleanUpVariable] = useState(false)
 
-    const handleSubmit = () => {
-        setLoading(true);
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
+        setLoading(true);
         if (editMode) {
             axios.put(`/api/habits-group/${data?.id}`, groupInfo)
                 .then((res: any) => {
@@ -84,56 +85,57 @@ const HabitsGroupForm = ({ data, editMode, editHabitsGroup, closeForm }: HabitGr
     return (
         <Overlay width="500px" closeOverlay={() => closeForm()} closeOnBackgroundClick={true}>
             <div className={stylesTheme.habitForm}>
-                <div className={stylesTheme.header}>
-                    <p className={stylesTheme.title}>New Habits Group</p>
-                </div>
-                <div className={stylesTheme.body}>
-                    <form className={stylesTheme.form}>
-                        <div className={stylesTheme.formGroup} style={{ flexDirection: 'row' }}>
-                            <input
-                                className={stylesTheme.input}
-                                type="text"
-                                placeholder="Group Name"
-                                style={{ width: '100%' }}
-                                value={groupInfo.name}
-                                onChange={(e) => setGroupInfo({ ...groupInfo, name: e.target.value })}
-                            />
-                            {/* <input
+                <form onSubmit={(e) => handleSubmit(e)}>
+                    <div className={stylesTheme.header}>
+                        <p className={stylesTheme.title}>New Habits Group</p>
+                    </div>
+                    <div className={stylesTheme.body}>
+                        <div className={stylesTheme.form}>
+                            <div className={stylesTheme.formGroup} style={{ flexDirection: 'row' }}>
+                                <input
+                                    className={stylesTheme.input}
+                                    type="text"
+                                    placeholder="Group Name"
+                                    style={{ width: '100%' }}
+                                    value={groupInfo.name}
+                                    onChange={(e) => setGroupInfo({ ...groupInfo, name: e.target.value })}
+                                />
+                                {/* <input
                                 className={stylesTheme.input}
                                 type="text"
                                 value={groupInfo.icon}
                                 onChange={(e) => setGroupInfo({ ...groupInfo, icon: e.target.value })}
                             /> */}
-                            <HabitsGroupIcons
-                                currentIcon={groupInfo.icon}
-                                showOnlyMode={false}
-                                type={'group'}
-                                onIconChange={(value: string) => { setGroupInfo({ ...groupInfo, icon: value }) }} />
+                                <HabitsGroupIcons
+                                    currentIcon={groupInfo.icon}
+                                    showOnlyMode={false}
+                                    type={'group'}
+                                    onIconChange={(value: string) => { setGroupInfo({ ...groupInfo, icon: value }) }} />
+                            </div>
                         </div>
-                    </form>
-                </div>
-                <div className={stylesTheme.footer}>
-                    <div>
-                        {editMode &&
-                            <button className={stylesTheme.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
-                                Delete
+                    </div>
+                    <div className={stylesTheme.footer}>
+                        <div>
+                            {editMode &&
+                                <button type='button' className={stylesTheme.deleteBtn} onClick={() => setShowDeleteConfirmation(true)}>
+                                    Delete
+                                </button>
+                            }
+                        </div>
+                        <div className={stylesTheme.mainAction}>
+                            <button type='button' className={stylesTheme.cancelBtn} onClick={() => closeForm()}>
+                                Cancel
                             </button>
-                        }
+                            <button
+                                type="submit"
+                                className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
+                                disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
+                            >
+                                {loading ? <Spinner border="5px" color="#fff" width='15px' height='15px' /> : editMode ? 'Edit' : 'Save'}
+                            </button>
+                        </div>
                     </div>
-                    <div className={stylesTheme.mainAction}>
-                        <button className={stylesTheme.cancelBtn} onClick={() => closeForm()}>
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className={`${stylesTheme.submit} ${editMode ? stylesTheme.bg_green : ""}`}
-                            onClick={() => handleSubmit()}
-                            disabled={groupInfo.name === '' || groupInfo.icon === '' || loading}
-                        >
-                            {loading ? <Spinner width='15px' height='15px'/> : editMode ? 'Edit' : 'Save'}
-                        </button>
-                    </div>
-                </div>
+                </form>
             </div>
             <ElementAnimator showElement={showDeleteConfirmation} type={0} duration={300}>
                 <Alert

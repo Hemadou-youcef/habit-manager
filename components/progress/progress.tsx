@@ -37,6 +37,7 @@ type mainInfo = {
 
 const ProgressBar = () => {
     const { selectedHabit, selectHabit, theme }: { selectedHabit: Habit, selectHabit: (habit: null) => void, theme: string } = useDataContext();
+    const [currentHabitId, setCurrentHabitId] = useState<number>(selectedHabit?.id || -1)
     const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -46,12 +47,22 @@ const ProgressBar = () => {
     const [statisticsDate, setStatisticsDate] = useState<Date>(new Date());
 
     const [loading, setLoading] = useState<boolean>(true);
+
     useEffect(() => {
-        setStatistics(undefined);
-        setStatisticsType('week');
-        setStatisticsDate(new Date());
-        setTabIndex(0);
-        if (selectedHabit) getHabitMainInfo();
+        if (currentHabitId == selectedHabit?.id) {
+            getHabitStatistics();
+        } else {
+            setStatistics(undefined);
+            setStatisticsType('week');
+            setStatisticsDate(new Date());
+            setTabIndex(0);
+
+        }
+        if (selectedHabit) {
+            getHabitMainInfo();
+            setCurrentHabitId(selectedHabit?.id);
+        }
+
     }, [selectedHabit]);
 
     const handleTabChange = (index: number) => {
