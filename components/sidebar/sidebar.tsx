@@ -59,7 +59,7 @@ const SideBar = ({ session, status, signOut }: { session: any, status: string, s
 
     useEffect(() => {
         mutate('/api/habits-group').then((res) => {
-            refreshGroupListData(res);
+            if (res) refreshGroupListData(res);
         })
     }, [habitsGroups])
 

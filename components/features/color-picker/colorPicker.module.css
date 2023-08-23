@@ -1,0 +1,63 @@
+.actionButton{
+    position: relative;
+    
+}
+
+.actionButtonIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #e4e2e2;
+    background-color: #ffffff;
+    color: #7a7a7a;
+    font-size: 15px;
+    cursor: pointer;
+}
+.actionButtonIcon:active {
+    background-color: #d9d9d9;
+}
+.actionDropDown{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.actionDropDownItem {
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: #7a7a7a;
+    font-size: 12px;
+    cursor: pointer;
+}
+.actionDropDownItem:hover {
+    background-color: #ffffff;
+}
+
+.iconItem{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+}
+.iconItem svg {
+    color: #7a7a7a;
+    cursor: pointer;
+}
+.actionButtonIconColor{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #7a7a7a;
+    cursor: pointer;
+}

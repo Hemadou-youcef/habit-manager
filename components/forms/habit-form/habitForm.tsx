@@ -12,6 +12,7 @@ import { useDataContext } from '@/components/layouts/app-layout/layout';
 import axios from 'axios';
 import useSWR, { SWRResponse } from "swr";
 import Overlay from '@/components/features/overlay/overlay'
+import ColorPicker from '@/components/features/color-picker/colorPicker';
 
 // Icons
 import { BiDotsVertical } from 'react-icons/bi';
@@ -203,13 +204,18 @@ const HabitForm = ({ defaulGrouptValues, data = null, editMode = false, refresh,
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 />
-                                <input
+                                <ColorPicker
+                                    currentColor={formData.accentColor}
+                                    onColorChange={(value: string) => { setFormData({ ...formData, accentColor: value }) }}
+                                />
+                                
+                                {/* <input
                                     className={stylesTheme.input}
                                     style={{ padding: 0, border: 0, height: "auto", overflow: "hidden", cursor: "pointer" }}
                                     type="color"
                                     value={formData.accentColor}
                                     onChange={(e) => setFormData({ ...formData, accentColor: e.target.value })}
-                                />
+                                /> */}
                                 <HabitsgroupsIcons
                                     currentIcon={formData.icon}
                                     showOnlyMode={false}

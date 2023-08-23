@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useSession, signIn, signOut } from "next-auth/react"
 
 // React Components
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, use, useContext, useEffect, useState } from 'react';
 
 // Styles
 import styles from './layout.module.css';
@@ -32,10 +32,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const [theme, setTheme] = useState('light');
 
     useEffect(() => {
+        setTheme(localStorage.getItem('theme') || 'light');
+    }, []);
+
+    useEffect(() => {
         if (status === 'unauthenticated' && router.pathname !== '/auth/signIn') {
             router.push('/auth/signIn');
         }
-        setTheme(localStorage.getItem('theme') || 'light');
     }, [status]);
 
     const selectHabit = (habit: Habit | null) => {
@@ -63,8 +66,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     if (status === 'loading' || (status === 'authenticated' && !session) || (status === 'unauthenticated' && window.location.pathname != '/auth/signIn')) return (
         <>
-            <div className={stylesTheme.pageLoading}>
-                <div className={stylesTheme.spinner}>
+            <div className={styles.pageLoading}>
+                <div className={styles.spinner}>
                 </div>
             </div>
         </>

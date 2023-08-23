@@ -1,0 +1,58 @@
+/* Dark Theme */
+.actionButton {
+    position: relative;
+}
+
+.actionButtonIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #3d3d3d;
+    background-color: #292929;
+    color: #e0e0e0;
+    font-size: 15px;
+    cursor: pointer;
+}
+.actionButtonIcon:active {
+    background-color: #1f1f1f;
+}
+.actionDropDown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.2);
+    z-index: 1;
+}
+.actionDropDownItem {
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: #e0e0e0;
+    font-size: 12px;
+    cursor: pointer;
+}
+.actionDropDownItem:hover {
+    background-color: #3d3d3d;
+}
+
+.iconItem {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.iconItem svg {
+    color: #e0e0e0;
+    cursor: pointer;
+}
+.actionButtonIconColor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}   
