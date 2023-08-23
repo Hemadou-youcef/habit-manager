@@ -130,8 +130,10 @@ const SideBar = ({ session, status, signOut }: { session: any, status: string, s
                         onClick={() => handleToggleTheme()}
                     >
                         {/* <TbSunMoon size={18} /> */}
-                        {theme === 'light' ? <BsFillSunFill size={18} /> : <MdDarkMode size={18} />}
-                        <p>Theme</p>
+                        {theme === 'dark' ? <BsFillSunFill size={18} /> : <MdDarkMode size={18} />}
+                        <p>
+                            {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                        </p>
                     </div>
                     <div className={stylesTheme.sectionElement} onClick={() => signOut()}>
                         <IoLogOutOutline size={18} />

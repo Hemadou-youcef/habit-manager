@@ -162,9 +162,8 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
                         height={350}
                         width={600}
                         options={{
-
                             responsive: false,
-                            maintainAspectRatio: true,
+                            maintainAspectRatio: false,
                             scales: {
                                 y: {
 

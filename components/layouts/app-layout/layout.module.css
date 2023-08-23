@@ -1,7 +1,7 @@
 .app {
     display: grid;
     grid-template-areas: "sidebar main progress";
-    grid-template-columns: 240px minmax(600px, 700px) auto;
+    grid-template-columns: 240px minmax(500px,auto) minmax(600px, 700px);
     height: 100vh;
     padding: 0;
 }

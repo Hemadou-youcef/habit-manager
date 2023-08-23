@@ -35,13 +35,6 @@ type habitList = {
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-// Configuration
-const habitSectionConfiguration = [
-    [0, 'Good', true],
-    [1, 'Bad', true],
-    [2, 'Done', true],
-    [3, 'Fail', true],
-]// [Section Index, Title, Background Color, Is Open or No]
 
 const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDate, refresh }: habitList) => {
     const { theme }: { theme: string } = useDataContext();
@@ -49,7 +42,10 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
 
     const [habitsGroupInfo, setHabitsGroupInfo] = useState<HabitsGroup | undefined>(habitsGroup)
     const [habitList, setHabitList] = useState<Habit[][] | HabitWithProgress[][]>(habits);
-    const [currentHabitSection, setCurrentHabitSection] = useState([habitSectionConfiguration[0], habitSectionConfiguration[1]]);
+
+    const [tabIndex, setTabIndex] = useState<number>(0);
+    const [currentHabitSection, setCurrentHabitSection] = useState<(Habit[] | string | boolean)[][]>([]);
+
     const [currentDate, setCurrentDate] = useState<Value>(new Date());
 
     const [showHabitsGroupForm, setShowHabitsGroupForm] = useState<boolean>(false);
@@ -63,6 +59,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
 
     useEffect(() => {
         setHabitList(habits);
+        handleTabChange(tabIndex, habits);
     }, [habits]);
 
     useEffect(() => {
@@ -74,6 +71,21 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    const handleTabChange = (tabNumber: number, _habitList: (Habit | Habit[])[][]) => {
+        switch (tabNumber) {
+            case 0:
+                setCurrentHabitSection([[_habitList[0] as Habit[], 'Good', true], [_habitList[1] as Habit[], 'Bad', true]]);
+                break;
+            case 1:
+                setCurrentHabitSection([[_habitList[2] as Habit[], 'Done', true]]);
+                break;
+            case 2:
+                setCurrentHabitSection([[_habitList[3] as Habit[], 'Fail', true]]);
+                break;
+        }
+        setTabIndex(tabNumber);
     }
 
     const handleEditHabitsGroup = (habitsGroup: HabitsGroup | null): void => {
@@ -155,59 +167,55 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
                     </div>
                 </div>
                 <div className={stylesTheme.body}>
-                    {loading ? <p className={stylesTheme.loading}>Loading...</p> :
-                        <>
-                            {!readOnly &&
-                                <div className={stylesTheme.habitsSections}>
-                                    <button
-                                        style={{
-                                            color: theme === 'light' ? '#2a67f4' : '#9ebbff',
-                                            borderColor: theme === 'light' ? '#2a67f4' : '#9ebbff'
-                                        }}
-                                        className={currentHabitSection.length > 1 ? stylesTheme.active : undefined}
-                                        onClick={() => setCurrentHabitSection([habitSectionConfiguration[0], habitSectionConfiguration[1]])}
-                                    >
-                                        Pending Habits
-                                    </button>
-                                    <button
-                                        style={{
-                                            color: theme === 'light' ? '#1ec448' : '#43df6a',
-                                            borderColor: theme === 'light' ? '#1ec448' : '#43df6a'
-                                        }}
-                                        className={currentHabitSection[0][0] == 2 ? stylesTheme.active : undefined}
-                                        onClick={() => setCurrentHabitSection([habitSectionConfiguration[2]])}
-                                    >
-                                        {`Done Habits (${habitList[2].length})`}
-                                    </button>
-                                    <button
-                                        style={{
-                                            color: theme === 'light' ? '#ff2828' : '#f76868',
-                                            borderColor: theme === 'light' ? '#ff2828' : '#f76868'
-                                        }}
-                                        className={currentHabitSection[0][0] == 3 ? stylesTheme.active : undefined}
-                                        onClick={() => setCurrentHabitSection([habitSectionConfiguration[3]])}
-                                    >
-                                        {`Fail Habits (${habitList[3].length})`}
-                                    </button>
-                                </div>
-                            }
-                            <div className={stylesTheme.habits}>
-                                {habitList[0].length === 0 && habitList[1].length === 0 && <p className={stylesTheme.noHabits}>No Habits Found</p>}
-                                {currentHabitSection.map((value, index) => (
-
-                                    <HabitsItem
-                                        title={`${value[1]} Habits`}
-                                        isOpen={value[2] as boolean}
-                                        habitList={habitList[value[0] as number]}
-                                        handleEditHabit={handleEditHabit}
-                                        handleEditHabitProgress={(habit: HabitWithProgress) => handleEditHabitProgress(value[1] as string, habit)}
-                                        readOnly={readOnly}
-                                        key={index}
-                                    />
-                                ))}
-                            </div>
-                        </>
+                    {!readOnly &&
+                        <div className={stylesTheme.habitsSections}>
+                            <button
+                                style={{
+                                    color: theme === 'light' ? '#2a67f4' : '#9ebbff',
+                                    borderColor: theme === 'light' ? '#2a67f4' : '#9ebbff'
+                                }}
+                                className={tabIndex == 0 ? stylesTheme.active : undefined}
+                                onClick={() => handleTabChange(0, habitList)}
+                            >
+                                Pending Habits
+                            </button>
+                            <button
+                                style={{
+                                    color: theme === 'light' ? '#1ec448' : '#43df6a',
+                                    borderColor: theme === 'light' ? '#1ec448' : '#43df6a'
+                                }}
+                                className={tabIndex == 1 ? stylesTheme.active : undefined}
+                                onClick={() => handleTabChange(1, habitList)}
+                            >
+                                {`Done Habits (${habitList[2].length})`}
+                            </button>
+                            <button
+                                style={{
+                                    color: theme === 'light' ? '#ff2828' : '#f76868',
+                                    borderColor: theme === 'light' ? '#ff2828' : '#f76868'
+                                }}
+                                className={tabIndex == 2 ? stylesTheme.active : undefined}
+                                onClick={() => handleTabChange(2, habitList)}
+                            >
+                                {`Fail Habits (${habitList[3].length})`}
+                            </button>
+                        </div>
                     }
+                    <div className={stylesTheme.habits}>
+                        {loading && <p className={stylesTheme.loading}>Loading...</p>}
+                        {!loading && (currentHabitSection).filter((value) => (value[0] as Habit[]).length != 0).length == 0 && <p className={stylesTheme.noHabits}>No Habits Found</p>}
+                        {currentHabitSection.map((value, index) => (
+                            <HabitsItem
+                                title={`${value[1]} Habits`}
+                                isOpen={value[2] as boolean}
+                                habitList={value[0] as Habit[]}
+                                handleEditHabit={handleEditHabit}
+                                handleEditHabitProgress={(habit: HabitWithProgress) => handleEditHabitProgress(value[1] as string, habit)}
+                                readOnly={false}
+                                key={index}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
             <ElementAnimator showElement={showHabitsGroupForm} type={0} duration={300}>
