@@ -31,13 +31,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const [habitsGroupList, setHabitsGroupList] = useState<HabitsGroup[]>([]);
     const [theme, setTheme] = useState('light');
 
+
+
     useEffect(() => {
         setTheme(localStorage.getItem('theme') || 'light');
     }, []);
 
     useEffect(() => {
-        if (status === 'unauthenticated' && router.pathname !== '/auth/signIn') {
-            router.push('/auth/signIn');
+        console.log(session);
+        if (status === 'unauthenticated') {
+            if (router.pathname !== '/auth/register' && router.pathname !== '/auth/signIn') router.push('/auth/signIn');
         }
     }, [status]);
 
@@ -64,7 +67,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     const stylesTheme = (theme === 'light') ? styles : stylesDarkTheme;
 
-    if (status === 'loading' || (status === 'authenticated' && !session) || (status === 'unauthenticated' && window.location.pathname != '/auth/signIn')) return (
+    if (
+        status === 'loading'
+        || (status === 'authenticated' && !session)
+        || (status === 'unauthenticated' && (router.pathname != '/auth/signIn' && router.pathname != '/auth/register'))
+    ) return (
         <>
             <div className={styles.pageLoading}>
                 <div className={styles.spinner}>
@@ -94,7 +101,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     </div>
                 </main>
             }
-            {(status === 'unauthenticated') && window.location.pathname === '/auth/signIn' &&
+            {(status === 'unauthenticated') && router.pathname === '/auth/signIn' &&
                 <div className={stylesTheme.notLogged}>
                     <div className={stylesTheme.notLoggedContent}>
                         <div className={stylesTheme.notLoggedTitle}>
@@ -102,6 +109,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                         </div>
                         <div className={stylesTheme.notLoggedDescription}>
                             The best app to manage your habits
+                        </div>
+                        {children}
+                    </div>
+                </div>
+            }
+            {(status === 'unauthenticated') && router.pathname === '/auth/register' &&
+                <div className={stylesTheme.notLogged}>
+                    <div className={stylesTheme.notLoggedContent}>
+                        <div className={stylesTheme.notLoggedTitle}>
+                            Register
                         </div>
                         {children}
                     </div>
