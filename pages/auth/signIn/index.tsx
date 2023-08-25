@@ -42,7 +42,10 @@ export default function SignIn({ providers, errorValue }: InferGetServerSideProp
     const handleSignIn = (providerId: string) => {
         if (loading) return;
         setLoading(true);
-        signIn(providerId, { callbackUrl: '/' });
+        signIn(providerId, { callbackUrl: '/' })
+        .finally(() => {
+            setLoading(false);
+        })
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -70,7 +73,7 @@ export default function SignIn({ providers, errorValue }: InferGetServerSideProp
                     <input type="password" id="Password" name="Password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
                 </label>
                 <button type="submit" className={styles.formSubmit}>
-                    {loginLoading ? <Spinner width="14px" height="14px" border="2px" color="white" /> : "Register"}
+                    {loginLoading ? <Spinner width="14px" height="14px" border="2px" color="white" /> : "Login"}
                 </button>
             </form>
             <div className={`${styles.formFooter} ${theme == 'light' ? '' : styles.text_white}`}>

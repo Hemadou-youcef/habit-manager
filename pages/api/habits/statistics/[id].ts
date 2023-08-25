@@ -9,7 +9,8 @@ const prisma = new PrismaClient()
 import { startOfDay, endOfDay, formatDistance, subDays } from 'date-fns';
 
 // Typescript types
-import { Progress, Session } from '@/types';
+import { Habit, Progress, Session } from '@/types';
+import { get } from 'http'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session: Session | null = await getServerSession(req, res, authOptions)
@@ -20,17 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 // GET STATISTICS OF A HABIT
                 const { id, type = 'week', date } = req.query;
                 if (!date) return res.status(400).json({ message: 'Missing parameter' });
+
                 const habit = await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')
 
                 // SET STARTING DATE AND ENDING DATE
-                const choosenDate = new Date(date as string);
-                const endOfChoosenDate = endOfDay(choosenDate);
-                let startOfChoosenDate;
-                if (type == 'day') { startOfChoosenDate = startOfDay(choosenDate); }
-                else if (type == 'week') { startOfChoosenDate = startOfDay(subDays(choosenDate, 7)); }
-                else if (type == 'month') { startOfChoosenDate = startOfDay(subDays(choosenDate, 30)); }
-                else if (type == 'year') { startOfChoosenDate = startOfDay(subDays(choosenDate, 365)); }
-                else return res.status(400).json({ message: 'Invalid request' });
+                const { startOfChoosenDate, endOfChoosenDate } = getStartingAndEndingDate(type as string, new Date(date as string));
 
                 // GET PROGRESS BETWEEN THIS DATES
                 const progress: Progress[] = await prisma.progress.findMany({
@@ -43,20 +38,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 })
 
-                // FILL THE EMPTY PROGRESS TO USE IT IN CHART JS
-                const dateLabel = getDatesInRange(startOfChoosenDate, endOfChoosenDate, type);
-                const startDate = new Date(habit.startDate).getTime();
-                let data = getDatesInRange(startOfChoosenDate, endOfChoosenDate, 'yyyy-mm-dd').map((date) => {
-                    const progressOfThisDate = progress.filter((value) => formatDate(value.createdAt, type) == formatDate(new Date(date), type));
-                    
-                    let progressDefaultValues = habit.type == 'good' || new Date(date).getTime() < startDate ? 0 : 1;
-                    if (habit.type == 'good') {
-                        if (progressOfThisDate.length > 0) progressDefaultValues = progressOfThisDate[0].value;
-                    } else {
-                        if (progressOfThisDate.length > 0) progressDefaultValues = progressOfThisDate[0].value;
-                    }
-                    return progressDefaultValues;
-                });
+                //  GET DATE LABELS
+                const dateLabel = getDatesInRange(startOfChoosenDate, endOfChoosenDate, type as string);
+                // GET DATA
+                const data = getbarChartData(habit, progress, type as string, startOfChoosenDate, endOfChoosenDate);
 
 
                 // FILL THE BARCHART
@@ -83,6 +68,92 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 }
 
+function getStartingAndEndingDate(type: string, date: Date) {
+    const choosenDate = new Date(date);
+    const endOfChoosenDate = endOfDay(choosenDate);
+    let startOfChoosenDate;
+    switch (type) {
+        case 'day':
+            startOfChoosenDate = startOfDay(choosenDate);
+            break;
+        case 'week':
+            startOfChoosenDate = startOfDay(subDays(choosenDate, 7));
+            break;
+        case 'month':
+            startOfChoosenDate = startOfDay(subDays(choosenDate, 30));
+            break;
+        case 'year':
+            startOfChoosenDate = startOfDay(subDays(choosenDate, 365));
+            break;
+        default:
+            throw { statusCode: 400, message: "Invalid type" }
+    }
+    return { startOfChoosenDate, endOfChoosenDate };
+}
+
+function getbarChartData(habit: Habit, progress: Progress[], type: string, startOfChoosenDate: Date, endOfChoosenDate: Date) {
+    const startDate = new Date(habit.startDate).getTime();
+
+    const daysInRange = getDatesInRange(
+        new Date(Math.max(startDate, startOfChoosenDate.getTime())),
+        endOfChoosenDate,
+        'yyyy-mm-dd',
+        true
+    );
+    // console.log(daysInRange)
+
+    const datesInRange = getDatesInRange(startOfChoosenDate, endOfChoosenDate, type, true);
+
+    return datesInRange.map((date) => {
+        let progressValue = habit?.type === 'good' || new Date(date).getTime() < startDate ? 0 : 1;
+
+        const progressOfThisDate = progress.filter(
+            (value: any) => formatDate(value.createdAt, type) === formatDate(new Date(date), type)
+        );
+
+        if (progressOfThisDate.length > 0) {
+            if (type === 'year' && habit?.type === 'bad') {
+                const daysInThisMonth = daysInRange.filter(
+                    (value) => formatDate(new Date(value), type) === formatDate(new Date(date), type)
+                ).length;
+                progressValue = progressOfThisDate.reduce((acc, value) => (value.value ? acc : acc - 1), daysInThisMonth);
+            } else {
+                progressValue = progressOfThisDate.reduce((acc, value) => acc + value.value, 0);
+            }
+        }
+
+        return progressValue;
+    });
+}
+
+
+function getbarCdhartData(habit: Habit, progress: Progress[], type: string, startOfChoosenDate: Date, endOfChoosenDate: Date) {
+    const startDate = new Date(progress[0].createdAt).getTime();
+
+    const daysOfThisStatistiques = getDatesInRange(startDate > startOfChoosenDate.getTime() ? new Date(startDate) : startOfChoosenDate, endOfChoosenDate, 'yyyy-mm-dd', true)
+
+    const datesOfThisStatistiques = getDatesInRange(startOfChoosenDate, endOfChoosenDate, type, true)
+
+    return datesOfThisStatistiques.map((date) => {
+        let progressDefaultValues = habit?.type == 'good' || new Date(date).getTime() < startDate ? 0 : 1;
+
+        const progressOfThisDate = progress.filter((value) => formatDate(value.createdAt, type) == formatDate(new Date(date), type));
+
+        if (progressOfThisDate.length > 0) {
+            if (type == 'year' && habit?.type == 'bad') {
+                const numberOfDaysOfThisMonth = daysOfThisStatistiques.filter((value) => formatDate(new Date(value), type) == formatDate(new Date(date), type)).length;
+
+                progressDefaultValues = progressOfThisDate.reduce((acc, value) => value ? acc - 1 : acc, numberOfDaysOfThisMonth);
+            } else {
+                progressDefaultValues = progressOfThisDate.reduce((acc, value) => acc + value.value, 0);
+            }
+        }
+
+        return progressDefaultValues;
+    });
+}
+
+
 function formatDate(date: Date, type: string) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const year = date.getFullYear();
@@ -96,13 +167,12 @@ function formatDate(date: Date, type: string) {
 }
 
 
-function getDatesInRange(startDate: Date, endDate: Date, type: string) {
+function getDatesInRange(startDate: Date, endDate: Date, type: string, fullDate = false) {
     const dates = [];
     const currentDate = new Date(startDate);
 
     while (currentDate <= endDate) {
-        dates.push(formatDate(currentDate, type));
-
+        dates.push(formatDate(currentDate, fullDate ? 'yyyy-mm-dd' : type));
         if (type === 'year') {
             currentDate.setMonth(currentDate.getMonth() + 1); // Increment by one month
         } else {

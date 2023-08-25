@@ -135,6 +135,7 @@ const HabitsList = ({ title, habitsGroup, readOnly, habits, loading, onChangeDat
                     // REPLACE THE OLD HABIT BY NEW ONE
                     newHabitLists[0][HabitIndex] = habit;
                 }
+                console.log(newHabitLists)
                 handleTabChange(tabIndex, newHabitLists)
                 setHabitList(newHabitLists);
             }

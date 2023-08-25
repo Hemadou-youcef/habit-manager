@@ -128,6 +128,7 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
 
     const handleFail = () => {
         (progress as Progress).value = 0;
+        console.log('step 1-',progress)
         handleEditProgress()
         setProgressEnd(true);
         setOptions(false);
@@ -228,7 +229,7 @@ const HabitItem = ({ habit, readOnly = true, editHabit, editHabitProgress }: Hab
                                         (
                                             <button onClick={() => setShowTimer(true)}>
                                                 <LuTimer size={18} />
-                                                {loading ? <Spinner border="1px" color="#a7a7a7" width="30px" height="30px"/> : 'Timer'}
+                                                {loading ? <Spinner border="1px" color="#a7a7a7" width="10px" height="10px"/> : 'Timer'}
                                             </button>
                                         )}
                                     {habit.goalsUnit === "times" && habit.type == 'good' &&

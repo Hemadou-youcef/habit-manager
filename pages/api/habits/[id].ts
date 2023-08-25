@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const { id }: { id?: string } = req.query;
         if (isNaN(parseInt(id as string))) throw { statusCode: 400, message: "Invalid Habit ID" }
-        await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')
+        const habit = await checkIfUserOwnsHabit(parseInt(id as string), session?.user?.id || '')
 
         switch (req.method) {
             case 'GET':
@@ -79,6 +79,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 })
 
+
+
                 return res.status(201).json({ message: "Habit Edited successfully", data: habitEditedInfo });
             case "DELETE":
 
@@ -103,7 +105,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 }
 
-
 const checkIfUserOwnsHabit = async (habitId: number, userId: string) => {
     const habit = await prisma.habits.findFirst({
         where: {
@@ -112,5 +113,5 @@ const checkIfUserOwnsHabit = async (habitId: number, userId: string) => {
     })
     if (!habit) throw { statusCode: 404, message: "Habit not found" }
     if (userId !== habit.userId) throw { statusCode: 401, message: "Unauthorized" }
-    return true;
+    return habit;
 }

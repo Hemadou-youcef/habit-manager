@@ -1,5 +1,6 @@
 // Next
 import { useRouter } from "next/router";
+import Head from 'next/head'
 
 // React 
 import { useEffect, useState } from "react";
@@ -59,7 +60,7 @@ const habitsGroup = () => {
             </div>
         </>
     );
-    if(Error || !habitsGroup) return (
+    if (Error || !habitsGroup) return (
         <>
             <div style={{
                 display: 'flex',
@@ -74,6 +75,12 @@ const habitsGroup = () => {
     )
     return (
         <>
+            <Head>
+                <title>{habitsGroup?.name}</title>
+                <meta name="description" content="Habits is the best app you would like to manage your habits" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <HabitsList
                 title={habitsGroup?.name}
                 habits={habitsList}

@@ -168,7 +168,7 @@ const StatisticsDrawer = ({ data, setStatisticsType, setStatisticsDate }: { data
                                 y: {
 
                                     beginAtZero: true,
-                                    suggestedMax: 10,
+                                    suggestedMax:( Math.max(...data?.datasets[0]?.data) + 1) || 5,
                                     grid: {
                                         display: false,
                                     },

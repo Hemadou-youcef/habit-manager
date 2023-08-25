@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth/next"
 const prisma = new PrismaClient()
 
 // Typescript types
-import { Session } from '@/types/index'
+import { Progress, Session } from '@/types/index'
 
 // catch error type
 type ErrorType = {
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const { id }: { id?: string } = req.query;
         if (isNaN(parseInt(id as string))) throw { statusCode: 400, message: "Invalid Progress ID" }
-        await checkIfUserOwnsProgress(parseInt(id as string), session?.user?.id || '')
+        const habit = await checkIfUserOwnsProgress(parseInt(id as string), session?.user?.id || '');
 
         switch (req.method) {
             case 'PUT':
@@ -36,7 +36,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         value: parseInt(value)
                     }
                 })
-                return res.status(201).json({ message: "Progress Updated", data: updateProgress })
+                let lastProgressFailDate: Date | undefined | null;
+                if (habit?.type === 'bad') {
+                    lastProgressFailDate = await findLastProgressFailDate(habit.id);
+                }
+
+                return res.status(201).json({ message: "Progress Updated", data: { ...updateProgress, lastFailDate: lastProgressFailDate } })
             default:
                 return res.status(405).json({ message: 'Method not allowed' })
         }
@@ -46,6 +51,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
 }
+
+
+const findLastProgressFailDate = async (habitId: number) => {
+    try {
+        const progress: Progress | null = await prisma.progress.findFirst({
+            where: {
+                habitId: habitId,
+                value: 0
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        console.log(progress)
+        if (progress) return progress.createdAt;
+        else return null;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const checkIfUserOwnsProgress = async (progressId: number, userId: string) => {
     const progress = await prisma.progress.findFirst({
         where: {
@@ -54,12 +80,14 @@ const checkIfUserOwnsProgress = async (progressId: number, userId: string) => {
         include: {
             habit: {
                 select: {
-                    userId: true
+                    id: true,
+                    userId: true,
+                    type: true
                 }
             }
         }
     })
     if (!progress) throw { statusCode: 404, message: "Progress not found" }
     if (userId != progress?.habit?.userId) throw { statusCode: 401, message: "Unauthorized" }
-    return true
+    return progress.habit;
 }

@@ -1,68 +1,153 @@
-/* Dark Theme */
+/* Dark Theme Styles */
 .bg_red {
-    background-color: #8c0b22;
+    background-color: #800000;
     color: white;
 }
 
 .bg_red:active {
-    background-color: #aa2235;
+    background-color: #b31b1b;
 }
 
 .bg_red:disabled {
-    background-color: #b8637b;
+    background-color: #a35858;
 }
 
 .bg_blue {
-    background-color: #1f4e9e;
+    background-color: #2a67f4;
     color: white;
 }
 
 .bg_blue:active {
-    background-color: #3b6bad;
+    background-color: #5585f3;
 }
 
 .bg_blue:disabled {
-    background-color: #6b8ec6;
+    background-color: #8faae9;
+}
+
+.content {
+    padding: 0px;
+    margin: 0;
+    background-color: #121212;
+    color: white;
 }
 
 .header {
-    border-bottom: 1px solid #333333;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+    background-color: #1f1f1f;
+    color: white;
+}
+
+.header input {
+    padding: 5px;
+    border: 0px;
+    border-radius: 5px;
+    background-color: #252525;
+    color: #ccc;
+    font-size: 15px;
+    font-weight: 500;
+    width: 100px;
+    text-align: center;
+    margin: 0px 10px;
+    outline: none;
+}
+
+.body {
+    padding: 10px;
+    background-color: #1f1f1f;
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    font-size: 50px;
+    font-weight: 600;
+    text-align: center;
+    width: 330px;
+    background-color: #252525;
 }
 
 .timer div {
-    border: 2px solid #666666;
-    color: #999999;
+    padding: 10px 0px;
+    border: 2px solid #333;
+    color: #ccc;
+    border-radius: 10px;
+    width: 110px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions>div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .actions button {
-    background-color: #444444;
-    color: white;
+    padding: 10px;
+    margin: 0px;
+    border: 0px;
+    width: 100px;
+    font-size: 15px;
+    font-weight: 500;
     border-radius: 5px;
-}
-
-.actions button:active {
-    background-color: #555555;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
 }
 
 .footer {
-    background-color: #333333;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: #252525;
 }
 
 .footer .submit {
-    background-color: #1f4e9e;
-    color: white;
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    background-color: #2a67f4;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
 }
 
 .footer .submit:active {
-    background-color: #3b6bad;
+    background-color: #2a67f4d9;
 }
 
 .footer .submit:disabled {
-    background-color: #6b8ec6;
+    background-color: #82a4f3d9;
+    cursor: not-allowed;
 }
 
 .footer .cancelBtn {
-    border: 1px solid #555555;
-    background-color: #333333;
-    color: #999999;
+    padding: 8px;
+    border-radius: 3px;
+    border: 0;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #ccc;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 3px;
+    cursor: pointer;
+    width: 70px;
 }

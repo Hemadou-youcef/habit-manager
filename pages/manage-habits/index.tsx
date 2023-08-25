@@ -1,4 +1,4 @@
-// Next Components
+// Next
 import Head from 'next/head'
 
 // React

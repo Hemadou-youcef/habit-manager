@@ -14,7 +14,7 @@ import Overlay from "@/components/features/overlay/overlay";
 import { Progress } from "@/types";
 
 
-const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, saveProgressTime: (minutes:number) => void, closeTimer: () => void }) => {
+const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, saveProgressTime: (minutes: number) => void, closeTimer: () => void }) => {
     const { theme }: { theme: string } = useDataContext();
     const stylesTheme = theme === "light" ? styles : stylesDarkTheme;
 
@@ -59,9 +59,24 @@ const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, savePro
 
     const saveTime = () => {
         stopTimer();
-        const minutes: number = parseInt(currentTime.split(':')[0]) * 60 + parseInt(currentTime.split(':')[1]);
-        console.log(currentTime.split(':')[0])
+        const minutes: number = calculateCurrentMinutes();
         saveProgressTime(minutes);
+    }
+
+    const handleChangeCurrentTimeFromInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === '') {
+            setCurrentTime('00:00:00');
+            setOldTime(0);
+            return;
+        }
+        const hours = Math.floor(parseInt(e.target.value) / 60).toString().padStart(2, '0');
+        const minutes = (parseInt(e.target.value) % 60).toString().padStart(2, '0');
+        setCurrentTime(`${hours}:${minutes}:00`)
+        setOldTime(parseInt(e.target.value) * 60);
+    }
+
+    const calculateCurrentMinutes = (): number => {
+        return parseInt(currentTime.split(':')[0]) * 60 + parseInt(currentTime.split(':')[1]);
     }
 
     const calculateCurrentTime = (_startTime: number) => {
@@ -92,8 +107,7 @@ const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, savePro
     const formatTime = (data: number[]): string => {
         const formatData: string[] = []
         data.forEach((value) => {
-            const prefix = Array.from({ length: 2 - value.toString().length }, (_, i) => "0").join('')
-            formatData.push(prefix + value.toString())
+            formatData.push(value.toString().padStart(2, '0'))
         })
         return formatData.join(":");
     }
@@ -101,7 +115,7 @@ const Timer = ({ data, saveProgressTime, closeTimer }: { data: Progress, savePro
         <Overlay width="350px" closeOverlay={() => closeTimer()} closeOnBackgroundClick={false}>
             <div className={stylesTheme.content}>
                 <div className={stylesTheme.header}>
-                    Habit #{data.habitId}
+                    <input type="number" min="0" value={calculateCurrentMinutes()} onChange={(e) => handleChangeCurrentTimeFromInput(e)} />
                 </div>
                 <div className={stylesTheme.body}>
                     <div className={stylesTheme.timer}>
